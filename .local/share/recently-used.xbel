@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xbel version="1.0"
+      xmlns:bookmark="http://www.freedesktop.org/standards/desktop-bookmarks"
+      xmlns:mime="http://www.freedesktop.org/standards/shared-mime-info"
+>
+  <bookmark href="file:///home/eya/Documents/gestion%20des%20entraineurs" added="2025-10-12T21:55:52.811370Z" modified="2025-10-12T21:55:52.811375Z" visited="2025-10-12T21:55:52.811370Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="inode/directory"/>
+        <bookmark:applications>
+          <bookmark:application name="glade-2" exec="&apos;glade-2 %u&apos;" modified="2025-10-12T21:55:52.811372Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestion%20des%20entraineurs/gestion-des-entraineurs.gladep" added="2025-10-12T21:56:52.946907Z" modified="2025-10-13T08:21:57.028669Z" visited="2025-10-12T21:56:52.946908Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/x-zerosize"/>
+        <bookmark:applications>
+          <bookmark:application name="org.gnome.Nautilus" exec="&apos;gnome-text-editor %U&apos;" modified="2025-10-13T08:21:57.028665Z" count="3"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestion%20des%20entraineurs/gestion-des-entraineurs.glade" added="2025-10-12T21:58:34.533136Z" modified="2025-10-13T18:21:43.414390Z" visited="2025-10-12T21:58:34.533136Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/x-zerosize"/>
+        <bookmark:applications>
+          <bookmark:application name="glade-2" exec="&apos;glade-2 %u&apos;" modified="2025-10-13T18:21:43.414388Z" count="14"/>
+          <bookmark:application name="org.gnome.Nautilus" exec="&apos;gnome-text-editor %U&apos;" modified="2025-10-13T08:21:03.618864Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Projets/projet1/projet1.gladep" added="2025-10-13T08:22:38.253408Z" modified="2025-10-13T08:22:38.253420Z" visited="2025-10-13T08:22:38.253410Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/xml"/>
+        <bookmark:applications>
+          <bookmark:application name="org.gnome.Nautilus" exec="&apos;env BAMF_DESKTOP_FILE_HINT=/var/lib/snapd/desktop/applications/firefox_firefox.desktop /snap/bin/firefox %u&apos;" modified="2025-10-13T08:22:38.253415Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestion%20entraineur1" added="2025-10-13T08:53:11.787470Z" modified="2025-10-13T08:53:11.787473Z" visited="2025-10-13T08:53:11.787471Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="inode/directory"/>
+        <bookmark:applications>
+          <bookmark:application name="glade-2" exec="&apos;glade-2 %u&apos;" modified="2025-10-13T08:53:11.787472Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestion%20entraineur1/gestion-entraineur1.glade" added="2025-10-13T09:26:17.130520Z" modified="2025-10-13T10:53:24.839391Z" visited="2025-10-13T09:26:17.130521Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/x-glade"/>
+        <bookmark:applications>
+          <bookmark:application name="glade-2" exec="&apos;glade-2 %u&apos;" modified="2025-10-13T10:37:54.444348Z" count="5"/>
+          <bookmark:application name="snap.firefox" exec="&apos;gio open %u&apos;" modified="2025-10-13T10:53:24.835758Z" count="2"/>
+          <bookmark:application name="xdg-desktop-portal-gnome" exec="&apos;xdg-desktop-portal-gnome %u&apos;" modified="2025-10-13T10:53:24.839389Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestion%20entraineur1/ajouet" added="2025-10-13T09:36:04.419799Z" modified="2025-10-13T09:36:04.419801Z" visited="2025-10-13T09:36:04.419799Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="inode/directory"/>
+        <bookmark:applications>
+          <bookmark:application name="glade-2" exec="&apos;glade-2 %u&apos;" modified="2025-10-13T09:36:04.419800Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestion%20entraineur1/ajouet/ajouet.glade" added="2025-10-13T09:37:27.226728Z" modified="2025-10-13T11:47:38.143204Z" visited="2025-10-13T09:37:27.226729Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/x-glade"/>
+        <bookmark:applications>
+          <bookmark:application name="glade-2" exec="&apos;glade-2 %u&apos;" modified="2025-10-13T10:35:31.377535Z" count="4"/>
+          <bookmark:application name="snap.firefox" exec="&apos;gio open %u&apos;" modified="2025-10-13T11:47:38.136657Z" count="3"/>
+          <bookmark:application name="xdg-desktop-portal-gnome" exec="&apos;xdg-desktop-portal-gnome %u&apos;" modified="2025-10-13T11:47:38.143202Z" count="3"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestion%20entraineur1/ajouet/ajouet.glade.bak" added="2025-10-13T11:47:38.136664Z" modified="2025-10-13T11:47:38.143218Z" visited="2025-10-13T11:47:38.136664Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/x-trash"/>
+        <bookmark:applications>
+          <bookmark:application name="snap.firefox" exec="&apos;gio open %u&apos;" modified="2025-10-13T11:47:38.136665Z" count="1"/>
+          <bookmark:application name="xdg-desktop-portal-gnome" exec="&apos;xdg-desktop-portal-gnome %u&apos;" modified="2025-10-13T11:47:38.143217Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestion%20entraineur1/ajouet/ajouet.gladep" added="2025-10-13T11:47:38.136668Z" modified="2025-10-13T11:47:38.143222Z" visited="2025-10-13T11:47:38.136668Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/octet-stream"/>
+        <bookmark:applications>
+          <bookmark:application name="snap.firefox" exec="&apos;gio open %u&apos;" modified="2025-10-13T11:47:38.136668Z" count="1"/>
+          <bookmark:application name="xdg-desktop-portal-gnome" exec="&apos;xdg-desktop-portal-gnome %u&apos;" modified="2025-10-13T11:47:38.143222Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestion%20entraineur1/ajouet/ajouet.gladep.bak" added="2025-10-13T11:47:38.136672Z" modified="2025-10-13T11:47:38.143212Z" visited="2025-10-13T11:47:38.136672Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/x-trash"/>
+        <bookmark:applications>
+          <bookmark:application name="snap.firefox" exec="&apos;gio open %u&apos;" modified="2025-10-13T11:47:38.136673Z" count="1"/>
+          <bookmark:application name="xdg-desktop-portal-gnome" exec="&apos;xdg-desktop-portal-gnome %u&apos;" modified="2025-10-13T11:47:38.143211Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestionEntraineur1/gestion-entraineur1.gladep" added="2025-10-13T11:55:53.075369Z" modified="2025-10-13T16:58:01.763062Z" visited="2025-10-13T11:55:53.075369Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/xml"/>
+        <bookmark:applications>
+          <bookmark:application name="org.gnome.Nautilus" exec="&apos;env BAMF_DESKTOP_FILE_HINT=/var/lib/snapd/desktop/applications/firefox_firefox.desktop /snap/bin/firefox %u&apos;" modified="2025-10-13T16:58:01.763057Z" count="3"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestionEntraineur1/ajouet/ajouet.gladep" added="2025-10-13T11:59:46.464826Z" modified="2025-10-13T14:01:28.290324Z" visited="2025-10-13T11:59:46.464826Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/xml"/>
+        <bookmark:applications>
+          <bookmark:application name="org.gnome.Nautilus" exec="&apos;env BAMF_DESKTOP_FILE_HINT=/var/lib/snapd/desktop/applications/firefox_firefox.desktop /snap/bin/firefox %u&apos;" modified="2025-10-13T14:01:28.290321Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestionEntraineur1/ajouet/src/interface.h" added="2025-10-13T12:03:21.357168Z" modified="2025-10-13T12:10:58.427518Z" visited="2025-10-13T12:03:21.357169Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-chdr"/>
+        <bookmark:applications>
+          <bookmark:application name="org.gnome.Nautilus" exec="&apos;gnome-text-editor %U&apos;" modified="2025-10-13T12:10:58.427514Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestionEntraineur1/ajouet/src/interface.c" added="2025-10-13T12:08:09.739276Z" modified="2025-10-13T12:10:33.359517Z" visited="2025-10-13T12:08:09.739277Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-csrc"/>
+        <bookmark:applications>
+          <bookmark:application name="org.gnome.Nautilus" exec="&apos;gnome-text-editor %U&apos;" modified="2025-10-13T12:10:33.359512Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestionEntraineur1/src/interface.c" added="2025-10-13T12:19:43.276452Z" modified="2025-10-13T12:19:43.276459Z" visited="2025-10-13T12:19:43.276453Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-csrc"/>
+        <bookmark:applications>
+          <bookmark:application name="org.gnome.Nautilus" exec="&apos;gnome-text-editor %U&apos;" modified="2025-10-13T12:19:43.276456Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/T%C3%A9l%C3%A9chargements/(aucun%20objet)%20-%20oualieya54@gmail.com%20-%20Gmail.html" added="2025-10-13T12:28:00.607709Z" modified="2025-10-13T12:30:40.438857Z" visited="2025-10-13T12:28:00.607710Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/html"/>
+        <bookmark:applications>
+          <bookmark:application name="xdg-desktop-portal-gnome" exec="&apos;xdg-desktop-portal-gnome %u&apos;" modified="2025-10-13T12:28:00.607711Z" count="1"/>
+          <bookmark:application name="snap.firefox" exec="&apos;gio open %u&apos;" modified="2025-10-13T12:28:00.866911Z" count="1"/>
+          <bookmark:application name="org.gnome.Nautilus" exec="&apos;gnome-text-editor %U&apos;" modified="2025-10-13T12:30:40.438853Z" count="3"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestionEntraineur1/ajouet/ajouet.glade" added="2025-10-13T14:26:06.652959Z" modified="2025-10-13T16:55:24.910522Z" visited="2025-10-13T14:26:06.652959Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/x-glade"/>
+        <bookmark:applications>
+          <bookmark:application name="glade-2" exec="&apos;glade-2 %u&apos;" modified="2025-10-13T14:27:32.606869Z" count="2"/>
+          <bookmark:application name="org.gnome.Nautilus" exec="&apos;gnome-text-editor %U&apos;" modified="2025-10-13T16:55:24.910521Z" count="4"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestionEntraineur1/src/callbacks.c" added="2025-10-14T13:25:15.931647Z" modified="2025-10-14T13:38:12.079954Z" visited="2025-10-14T13:25:15.931648Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-csrc"/>
+        <bookmark:applications>
+          <bookmark:application name="org.gnome.Nautilus" exec="&apos;gnome-text-editor %U&apos;" modified="2025-10-14T13:38:12.079954Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestionEntraineur1/gestion-entraineur1.glade" added="2025-10-14T13:34:52.985069Z" modified="2025-10-14T15:18:22.076262Z" visited="2025-10-14T13:34:52.985070Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/x-glade"/>
+        <bookmark:applications>
+          <bookmark:application name="org.gnome.Nautilus" exec="&apos;gnome-text-editor %U&apos;" modified="2025-10-14T13:34:52.985071Z" count="1"/>
+          <bookmark:application name="glade-2" exec="&apos;glade-2 %u&apos;" modified="2025-10-14T15:18:22.076260Z" count="3"/>
+          <bookmark:application name="snap.firefox" exec="&apos;gio open %u&apos;" modified="2025-10-14T14:40:18.772665Z" count="1"/>
+          <bookmark:application name="xdg-desktop-portal-gnome" exec="&apos;xdg-desktop-portal-gnome %u&apos;" modified="2025-10-14T14:40:18.796108Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestionEntraineur1.zip" added="2025-10-14T15:31:41.701550Z" modified="2025-10-14T15:31:41.701710Z" visited="2025-10-14T15:31:41.701551Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/zip"/>
+        <bookmark:applications>
+          <bookmark:application name="org.gnome.Nautilus" exec="&apos;org.gnome.Nautilus %u&apos;" modified="2025-10-14T15:31:41.701553Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+</xbel>

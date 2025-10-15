@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xbel version="1.0"
+      xmlns:bookmark="http://www.freedesktop.org/standards/desktop-bookmarks"
+      xmlns:mime="http://www.freedesktop.org/standards/shared-mime-info"
+>
+  <bookmark href="file:///home/eya/Documents/gestion%20des%20entraineurs/gestion-des-entraineurs.glade" added="2025-10-13T08:21:07.229609Z" modified="2025-10-14T13:38:58.707875Z" visited="2025-10-14T14:38:12.704362+01">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <bookmark:applications>
+          <bookmark:application name="gnome-text-editor" exec="&apos;gnome-text-editor %u&apos;" modified="2025-10-14T13:38:58.707875Z" count="127"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestion%20des%20entraineurs/gestion-des-entraineurs.gladep" added="2025-10-13T08:22:00.341141Z" modified="2025-10-14T13:38:58.707815Z" visited="2025-10-14T14:38:12.704623+01">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <bookmark:applications>
+          <bookmark:application name="gnome-text-editor" exec="&apos;gnome-text-editor %u&apos;" modified="2025-10-14T13:38:58.707814Z" count="123"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestionEntraineur1/ajouet/src/interface.h" added="2025-10-13T12:03:24.239884Z" modified="2025-10-14T13:38:58.707813Z" visited="2025-10-14T14:38:12.772270+01">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <bookmark:applications>
+          <bookmark:application name="gnome-text-editor" exec="&apos;gnome-text-editor %u&apos;" modified="2025-10-14T13:38:58.707811Z" count="121"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestionEntraineur1/ajouet/src/interface.c" added="2025-10-13T12:08:13.232763Z" modified="2025-10-14T13:38:58.707874Z" visited="2025-10-14T14:38:12.860674+01">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <bookmark:applications>
+          <bookmark:application name="gnome-text-editor" exec="&apos;gnome-text-editor %u&apos;" modified="2025-10-14T13:38:58.707873Z" count="120"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestionEntraineur1/gestion-entraineur1.glade" added="2025-10-13T12:13:09.339330Z" modified="2025-10-14T13:38:58.707816Z" visited="2025-10-14T14:38:14.357960+01">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <bookmark:applications>
+          <bookmark:application name="gnome-text-editor" exec="&apos;gnome-text-editor %u&apos;" modified="2025-10-14T13:38:58.707816Z" count="115"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestionEntraineur1/src/interface.c" added="2025-10-13T12:19:47.073651Z" modified="2025-10-14T13:38:58.707870Z" visited="2025-10-14T14:38:12.779288+01">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <bookmark:applications>
+          <bookmark:application name="gnome-text-editor" exec="&apos;gnome-text-editor %u&apos;" modified="2025-10-14T13:38:58.707870Z" count="115"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestionEntraineur1/ajouet/ajouet.glade" added="2025-10-13T12:39:58.244581Z" modified="2025-10-14T13:38:58.707871Z" visited="2025-10-14T14:38:12.982686+01">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <bookmark:applications>
+          <bookmark:application name="gnome-text-editor" exec="&apos;gnome-text-editor %u&apos;" modified="2025-10-14T13:38:58.707871Z" count="103"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/eya/Documents/gestionEntraineur1/src/callbacks.c" added="2025-10-14T13:25:19.293325Z" modified="2025-10-14T13:38:58.707872Z" visited="2025-10-14T14:38:12.780448+01">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <bookmark:applications>
+          <bookmark:application name="gnome-text-editor" exec="&apos;gnome-text-editor %u&apos;" modified="2025-10-14T13:38:58.707872Z" count="4"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+</xbel>
