@@ -1,0 +1,7 @@
+<glade-settings>
+<window id="MainWindow" visible="1" x="81" y="69" width="910" height="539"/>
+<window id="Palette" visible="1" x="908" y="597" width="291" height="539"/>
+<window id="PropertyEditor" visible="1" x="888" y="47" width="364" height="455"/>
+<window id="WidgetTree" visible="1" x="530" y="32" width="250" height="320"/>
+<window id="Clipboard" visible="0" x="498" y="243" width="150" height="200"/>
+</glade-settings>

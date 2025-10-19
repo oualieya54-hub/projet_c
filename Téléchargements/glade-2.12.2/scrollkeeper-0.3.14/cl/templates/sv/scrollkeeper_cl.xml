@@ -1,0 +1,791 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ScrollKeeperContentsList>
+
+
+
+  <sect categorycode="Applications">
+    <title>Program</title>
+    <sect categorycode="ApplicationsAmusement">
+      <title>Underhållning</title>
+      </sect>
+    <sect categorycode="ApplicationsEducation">
+      <title>Undervisning</title>
+      <sect categorycode="ApplicationsEducationArts">
+        <title>Konst</title>
+        </sect>
+      <sect categorycode="ApplicationsEducationComputer Science">
+        <title>Datavetenskap</title>
+        </sect>
+      <sect categorycode="ApplicationsEducationEnglish">
+        <title>Engelska</title>
+        </sect>
+      <sect categorycode="ApplicationsEducationLanguage">
+        <title>Språk</title>
+        </sect>
+      <sect categorycode="ApplicationsEducationMaths">
+        <title>Matematik</title>
+        </sect>
+      <sect categorycode="ApplicationsEducationMusic">
+        <title>Musik</title>
+        </sect>
+      <sect categorycode="ApplicationsEducationScience">
+        <title>Vetenskap</title>
+        </sect>
+      <sect categorycode="ApplicationsEducationTechnology">
+        <title>Teknik</title>
+        </sect>
+      <sect categorycode="ApplicationsEducationTesting">
+        <title>Test</title>
+        </sect>
+      <sect categorycode="ApplicationsEducationOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+    <sect categorycode="ApplicationsGames">
+      <title>Spel</title>
+      <sect categorycode="ApplicationsGamesArcade">
+        <title>Arkad</title>
+        </sect>
+      <sect categorycode="ApplicationsGamesBoard">
+        <title>Bräde</title>
+        </sect>
+      <sect categorycode="ApplicationsGamesFirst Person Shooters">
+        <title>FPS</title>
+        </sect>
+      <sect categorycode="ApplicationsGamesPuzzles">
+        <title>Gåtor</title>
+        </sect>
+      <sect categorycode="ApplicationsGamesFighting">
+        <title>Kampsport</title>
+        </sect>
+      <sect categorycode="ApplicationsGamesRole-Playing">
+        <title>Rollspel</title>
+        </sect>
+      <sect categorycode="ApplicationsGamesSimulation">
+        <title>Simulering</title>
+        </sect>
+      <sect categorycode="ApplicationsGamesStrategy">
+        <title>Strategi</title>
+        </sect>
+      <sect categorycode="ApplicationsGamesOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+    <sect categorycode="ApplicationsInternet">
+      <title>Internet</title>
+      <sect categorycode="ApplicationsInternetChat">
+        <title>Chatt</title>
+        </sect>
+      <sect categorycode="ApplicationsInternetEmail">
+        <title>E-post</title>
+        </sect>
+      <sect categorycode="ApplicationsInternetFax">
+        <title>Fax</title>
+        </sect>
+      <sect categorycode="ApplicationsInternetFile Sharing">
+        <title>Fildelning</title>
+        </sect>
+      <sect categorycode="ApplicationsInternetFTP">
+        <title>FTP</title>
+        </sect>
+      <sect categorycode="ApplicationsInternetInternet Phone">
+        <title>IP-telefoni</title>
+        </sect>
+      <sect categorycode="ApplicationsInternetMessaging">
+        <title>Meddelande</title>
+        </sect>
+      <sect categorycode="ApplicationsInternetNews">
+        <title>Diskussionsgrupper</title>
+        </sect>
+      <sect categorycode="ApplicationsInternetVideo Conferencing">
+        <title>Videokonferens</title>
+        </sect>
+      <sect categorycode="ApplicationsInternetWeb">
+        <title>Webb</title>
+        </sect>
+      <sect categorycode="ApplicationsInternetOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+    <sect categorycode="ApplicationsMultimedia">
+      <title>Multimedia</title>
+      <sect categorycode="ApplicationsMultimediaGraphics">
+        <title>Grafik</title>
+        <sect categorycode="ApplicationsMultimediaGraphics3D Modelling">
+          <title>3D-modellering</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaGraphics3D Rendering">
+          <title>3D-rendering</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaGraphicsCAD">
+          <title>CAD</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaGraphicsCapture">
+          <title>Fångande</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaGraphicsConversion">
+          <title>Omvandling</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaGraphicsDrawing">
+          <title>Ritande</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaGraphicsEditing">
+          <title>Redigering</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaGraphicsViewing">
+          <title>Visande</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaGraphicsOther">
+          <title>Annat</title>
+          </sect>
+      </sect>
+      <sect categorycode="ApplicationsMultimediaSound">
+        <title>Ljud</title>
+        <sect categorycode="ApplicationsMultimediaSoundAnalysis">
+          <title>Analys</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaSoundCD Mastering">
+          <title>CD-skapande</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaSoundConversion">
+          <title>Omvandling</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaSoundEditing">
+          <title>Redigering</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaSoundMIDI">
+          <title>MIDI</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaSoundMixers">
+          <title>Mixers</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaSoundPlayers">
+          <title>Spelare</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaSoundRecording">
+          <title>Inspelning</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaSoundSpeech">
+          <title>Tal</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaSoundOther">
+          <title>Annat</title>
+          </sect>
+      </sect>
+      <sect categorycode="ApplicationsMultimediaVideo">
+        <title>Video</title>
+        <sect categorycode="ApplicationsMultimediaVideoCapture">
+          <title>Fångande</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaVideoConversion">
+          <title>Omvandling</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaVideoDisplay">
+          <title>Visning</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaVideoEditing">
+          <title>Redigering</title>
+          </sect>
+        <sect categorycode="ApplicationsMultimediaVideoOther">
+          <title>Annat</title>
+          </sect>
+      </sect>
+      <sect categorycode="ApplicationsMultimediaOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+    <sect categorycode="ApplicationsOffice">
+      <title>Kontor</title>
+      <sect categorycode="ApplicationsOfficeCalendar">
+        <title>Kalender</title>
+        </sect>
+      <sect categorycode="ApplicationsOfficeData Processing">
+        <title>Databehandling</title>
+        </sect>
+      <sect categorycode="ApplicationsOfficeDatabase">
+        <title>Databas</title>
+        </sect>
+      <sect categorycode="ApplicationsOfficeEmail">
+        <title>E-post</title>
+        </sect>
+      <sect categorycode="ApplicationsOfficeFinancial">
+        <title>Ekonomi</title>
+        </sect>
+      <sect categorycode="ApplicationsOfficePIM">
+        <title>PIM</title>
+        </sect>
+      <sect categorycode="ApplicationsOfficePlotting">
+        <title>Grafritande</title>
+        </sect>
+      <sect categorycode="ApplicationsOfficePresentation">
+        <title>Presentation</title>
+        </sect>
+      <sect categorycode="ApplicationsOfficePublishing">
+        <title>Publicering</title>
+        <sect categorycode="ApplicationsOfficePublishingWeb Publishing">
+          <title>Webbpublicering</title>
+          </sect>
+      </sect>
+      <sect categorycode="ApplicationsOfficeWord Processing">
+        <title>Ordbehandling</title>
+        </sect>
+      <sect categorycode="ApplicationsOfficeOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+    <sect categorycode="ApplicationsScientific">
+      <title>Vetenskapligt</title>
+      <sect categorycode="ApplicationsScientificAstronomy">
+        <title>Astronomi</title>
+        </sect>
+      <sect categorycode="ApplicationsScientificAstrophysics">
+        <title>Astrofysik</title>
+        </sect>
+      <sect categorycode="ApplicationsScientificBiology">
+        <title>Biologi</title>
+        </sect>
+      <sect categorycode="ApplicationsScientificChemistry">
+        <title>Kemi</title>
+        </sect>
+      <sect categorycode="ApplicationsScientificEDA">
+        <title>EDA</title>
+        </sect>
+      <sect categorycode="ApplicationsScientificGenetics">
+        <title>Genetik</title>
+        </sect>
+      <sect categorycode="ApplicationsScientificMath">
+        <title>Matematik</title>
+        </sect>
+      <sect categorycode="ApplicationsScientificPhysics">
+        <title>Fysik</title>
+        </sect>
+      <sect categorycode="ApplicationsScientificVisualisation">
+        <title>Visualisering</title>
+        </sect>
+      <sect categorycode="ApplicationsScientificOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+    <sect categorycode="ApplicationsSecurity">
+      <title>Säkerhet</title>
+      <sect categorycode="ApplicationsSecurityCryptography">
+        <title>Kryptografi</title>
+        </sect>
+      <sect categorycode="ApplicationsSecurityOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+    <sect categorycode="ApplicationsText Editors">
+      <title>Textredigerare</title>
+      <sect categorycode="ApplicationsText EditorsCLI">
+        <title>Konsollbaserade</title>
+        </sect>
+      <sect categorycode="ApplicationsText EditorsGUI">
+        <title>Grafiska</title>
+        </sect>
+      <sect categorycode="ApplicationsText EditorsOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+    <sect categorycode="ApplicationsUtilities">
+      <title>Verktyg</title>
+      <sect categorycode="ApplicationsUtilitiesArchiving">
+        <title>Arkivering</title>
+        </sect>
+      <sect categorycode="ApplicationsUtilitiesCalculating">
+        <title>Beräkning</title>
+        </sect>
+      <sect categorycode="ApplicationsUtilitiesClocks">
+        <title>Klockor</title>
+        </sect>
+      <sect categorycode="ApplicationsUtilitiesCompression">
+        <title>Komprimering</title>
+        </sect>
+      <sect categorycode="ApplicationsUtilitiesFile Utilities">
+        <title>Filverktyg</title>
+        </sect>
+      <sect categorycode="ApplicationsUtilitiesMonitors">
+        <title>Övervakare</title>
+        </sect>
+      <sect categorycode="ApplicationsUtilitiesPrinting">
+        <title>Utskrift</title>
+        </sect>
+      <sect categorycode="ApplicationsUtilitiesTerminals">
+        <title>Terminaler</title>
+        </sect>
+      <sect categorycode="ApplicationsUtilitiesText Utilities">
+        <title>Textverktyg</title>
+        </sect>
+      <sect categorycode="ApplicationsUtilitiesOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+    <sect categorycode="ApplicationsX">
+      <title>X</title>
+      <sect categorycode="ApplicationsXConfiguration">
+        <title>Konfiguration</title>
+        </sect>
+      <sect categorycode="ApplicationsXFonts">
+        <title>Typsnitt</title>
+        </sect>
+      <sect categorycode="ApplicationsXLogin Managers">
+        <title>Inloggningshanterare</title>
+        </sect>
+      <sect categorycode="ApplicationsXScreensavers">
+        <title>Skärmsläckare</title>
+        </sect>
+      <sect categorycode="ApplicationsXWindow Managers">
+        <title>Fönsterhanterare</title>
+        </sect>
+      <sect categorycode="ApplicationsXOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+  </sect>
+
+  <sect categorycode="CDE">
+    <title>CDE</title>
+    </sect>
+
+  <sect categorycode="Development">
+    <title>Utveckling</title>
+    <sect categorycode="DevelopmentDatabases">
+      <title>Databaser</title>
+      </sect>
+    <sect categorycode="DevelopmentDevelopment Tools">
+      <title>Utvecklingsverktyg</title>
+      <sect categorycode="DevelopmentDevelopment ToolsBuild Tools">
+        <title>Byggverktyg</title>
+        </sect>
+      <sect categorycode="DevelopmentDevelopment ToolsCode Generators">
+        <title>Kodgeneratorer</title>
+        </sect>
+      <sect categorycode="DevelopmentDevelopment ToolsConfiguration">
+        <title>Konfiguration</title>
+        </sect>
+      <sect categorycode="DevelopmentDevelopment ToolsDebuggers">
+        <title>Felsökare</title>
+        </sect>
+      <sect categorycode="DevelopmentDevelopment ToolsIDEs">
+        <title>IDE:er</title>
+        </sect>
+      <sect categorycode="DevelopmentDevelopment ToolsPackaging">
+        <title>Paketering</title>
+        </sect>
+      <sect categorycode="DevelopmentDevelopment ToolsProfiling">
+        <title>Profilering</title>
+        </sect>
+      <sect categorycode="DevelopmentDevelopment ToolsRAD">
+        <title>RAD</title>
+        </sect>
+      <sect categorycode="DevelopmentDevelopment ToolsVersion Control">
+        <title>Versionshantering</title>
+        </sect>
+      <sect categorycode="DevelopmentDevelopment ToolsOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+    <sect categorycode="DevelopmentEnvironments">
+      <title>Miljöer</title>
+      <sect categorycode="DevelopmentEnvironmentsADA">
+        <title>ADA</title>
+        </sect>
+      <sect categorycode="DevelopmentEnvironmentsC">
+        <title>C</title>
+        </sect>
+      <sect categorycode="DevelopmentEnvironmentsC++">
+        <title>C++</title>
+        </sect>
+      <sect categorycode="DevelopmentEnvironmentsGNOME">
+        <title>GNOME</title>
+        </sect>
+      <sect categorycode="DevelopmentEnvironmentsGTK+">
+        <title>GTK+</title>
+        </sect>
+      <sect categorycode="DevelopmentEnvironmentsgtk++">
+        <title>gtk++</title>
+        </sect>
+      <sect categorycode="DevelopmentEnvironmentsJava">
+        <title>Java</title>
+        </sect>
+      <sect categorycode="DevelopmentEnvironmentsKDE">
+        <title>KDE</title>
+        </sect>
+      <sect categorycode="DevelopmentEnvironmentsPerl">
+        <title>Perl</title>
+        </sect>
+      <sect categorycode="DevelopmentEnvironmentsPython">
+        <title>Python</title>
+        </sect>
+      <sect categorycode="DevelopmentEnvironmentsQt">
+        <title>Qt</title>
+        </sect>
+      <sect categorycode="DevelopmentEnvironmentsTcl/Tk">
+        <title>Tcl/Tk</title>
+        </sect>
+      <sect categorycode="DevelopmentEnvironmentsWebML">
+        <title>WebML</title>
+        </sect>
+      <sect categorycode="DevelopmentEnvironmentsOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+    <sect categorycode="DevelopmentKernels">
+      <title>Kärnor</title>
+      <sect categorycode="DevelopmentKernelsFreeBSD">
+        <title>FreeBSD</title>
+        </sect>
+      <sect categorycode="DevelopmentKernelsLinux">
+        <title>Linux</title>
+        </sect>
+      <sect categorycode="DevelopmentKernelsNetBSD">
+        <title>NetBSD</title>
+        </sect>
+      <sect categorycode="DevelopmentKernelsOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+    <sect categorycode="DevelopmentLibraries">
+      <title>Bibliotek</title>
+      </sect>
+    <sect categorycode="DevelopmentSystem Calls">
+      <title>Systemanrop</title>
+      </sect>
+    <sect categorycode="DevelopmentOther">
+      <title>Annat</title>
+      </sect>
+  </sect>
+  <sect categorycode="General">
+    <title>Allmänt</title>
+    <sect categorycode="GeneralLicenses">
+      <title>Licenser</title>
+      </sect>
+    <sect categorycode="GeneralLinux">
+      <title>Linux</title>
+      <sect categorycode="GeneralLinuxDistributions">
+        <title>Distributioner</title>
+        <sect categorycode="GeneralLinuxDistributionsCaldera">
+          <title>Caldera</title>
+          </sect>
+        <sect categorycode="GeneralLinuxDistributionsDebian">
+          <title>Debian</title>
+          </sect>
+        <sect categorycode="GeneralLinuxDistributionsMandrake">
+          <title>Mandrake</title>
+          </sect>
+        <sect categorycode="GeneralLinuxDistributionsRed Flag">
+          <title>Red Flag</title>
+          </sect>
+        <sect categorycode="GeneralLinuxDistributionsRed Hat">
+          <title>Red Hat</title>
+          </sect>
+        <sect categorycode="GeneralLinuxDistributionsSlackware">
+          <title>Slackware</title>
+          </sect>
+        <sect categorycode="GeneralLinuxDistributionsSuSE">
+          <title>SuSE</title>
+          </sect>
+        <sect categorycode="GeneralLinuxDistributionsOther">
+          <title>Annat</title>
+          </sect>
+      </sect>
+      <sect categorycode="GeneralLinuxGeneral">
+        <title>Allmänt</title>
+        </sect>
+      <sect categorycode="GeneralLinuxOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+    <sect categorycode="GeneralOther">
+      <title>Annat</title>
+      </sect>
+  </sect>
+
+  <sect categorycode="GNOME">
+    <title>GNOME</title>
+    <sect categorycode="GNOMEAccessibility">
+      <title>Tillgänglighet</title>
+      </sect>
+    <sect categorycode="GNOMECore Desktop">
+      <title>Kärnskrivbordet</title>
+      </sect>
+    <sect categorycode="GNOMEDesktop">
+      <title>Skrivbord</title>
+      <sect categorycode="GNOMEDesktopUser Guides">
+        <title>Användarguider</title>
+        </sect>
+    </sect>
+    <sect categorycode="GNOMEApplets">
+      <title>Panelprogram</title>
+      <sect categorycode="GNOMEAppletsAccessories">
+        <title>Tillbehör</title>
+        </sect>
+      <sect categorycode="GNOMEAppletsAmusement">
+        <title>Underhållning</title>
+        </sect>
+      <sect categorycode="GNOMEAppletsClock">
+        <title>Klocka</title>
+        </sect>
+      <sect categorycode="GNOMEAppletsInternet">
+        <title>Internet</title>
+        </sect>
+      <sect categorycode="GNOMEAppletsMonitors">
+        <title>Övervakare</title>
+        </sect>
+      <sect categorycode="GNOMEAppletsMultimedia">
+        <title>Multimedia</title>
+        </sect>
+      <sect categorycode="GNOMEAppletsNetwork">
+        <title>Nätverk</title>
+        </sect>
+      <sect categorycode="GNOMEAppletsUtility">
+        <title>Verktyg</title>
+        </sect>
+    </sect>
+    <sect categorycode="GNOMEApplications">
+      <title>Program</title>
+      <sect categorycode="GNOMEApplicationsAccessories">
+        <title>Tillbehör</title>
+        </sect>
+      <sect categorycode="GNOMEApplicationsDesktop Preferences">
+        <title>Skrivbordsinställningar</title>
+        </sect>
+      <sect categorycode="GNOMEApplicationsGames">
+        <title>Spel</title>
+        </sect>
+      <sect categorycode="GNOMEApplicationsGraphics">
+        <title>Grafik</title>
+        </sect>
+      <sect categorycode="GNOMEApplicationsInternet">
+        <title>Internet</title>
+        </sect>
+      <sect categorycode="GNOMEApplicationsOffice">
+        <title>Kontor</title>
+        </sect>
+      <sect categorycode="GNOMEApplicationsProgramming">
+        <title>Programmering</title>
+        </sect>
+      <sect categorycode="GNOMEApplicationsSound and Video">
+        <title>Ljud och video</title>
+        </sect>
+      <sect categorycode="GNOMEApplicationsSystem Tools">
+        <title>Systemverktyg</title>
+        </sect>
+    </sect>
+    <sect categorycode="GNOMEPreferences">
+      <title>Inställningar</title>
+      </sect>
+    <sect categorycode="GNOMESystem Administration">
+      <title>Systemadministration</title>
+      </sect>
+    <sect categorycode="GNOMEUtilities">
+      <title>Verktyg</title>
+      </sect>
+    <sect categorycode="GNOMEDevelopment">
+      <title>Utveckling</title>
+      <sect categorycode="GNOMEDevelopmentApplications">
+        <title>Program</title>
+        </sect>
+      <sect categorycode="GNOMEDevelopmentIntroductory">
+        <title>Introduktion</title>
+        </sect>
+      <sect categorycode="GNOMEDevelopmentTutorials">
+        <title>Guider</title>
+        </sect>
+      <sect categorycode="GNOMEDevelopmentWhite Papers">
+        <title>Beskrivningar</title>
+        </sect>
+    </sect>
+    <sect categorycode="GNOMEGames">
+      <title>Spel</title>
+      </sect>
+    <sect categorycode="GNOMEGraphics">
+      <title>Grafik</title>
+      </sect>
+    <sect categorycode="GNOMEInternet">
+      <title>Internet</title>
+      </sect>
+    <sect categorycode="GNOMEMultimedia">
+      <title>Multimedia</title>
+      </sect>
+    <sect categorycode="GNOMESettings">
+      <title>Inställningar</title>
+      </sect>
+    <sect categorycode="GNOMESystem">
+      <title>System</title>
+      </sect>
+    <sect categorycode="GNOMEOther">
+      <title>Annat</title>
+      </sect>
+  </sect>
+
+  <sect categorycode="KDE">
+    <title>KDE</title>
+    <sect categorycode="KDEUtilities">
+      <title>Verktyg</title>
+      </sect>
+    <sect categorycode="KDEApplications">
+      <title>Program</title>
+      </sect>
+    <sect categorycode="KDEGames">
+      <title>Spel</title>
+      </sect>
+    <sect categorycode="KDEGraphics">
+      <title>Grafik</title>
+      </sect>
+    <sect categorycode="KDEInternet">
+      <title>Internet</title>
+      </sect>
+    <sect categorycode="KDEMultimedia">
+      <title>Multimedia</title>
+      </sect>
+    <sect categorycode="KDESettings">
+      <title>Inställningar</title>
+      </sect>
+    <sect categorycode="KDESystem">
+      <title>System</title>
+      </sect>
+    <sect categorycode="KDEPrograms">
+      <title>Program</title>
+      </sect>
+    <sect categorycode="KDEDevelopment">
+      <title>Utveckling</title>
+      </sect>
+    <sect categorycode="KDEOther">
+      <title>Annat</title>
+      </sect>
+  </sect>
+
+  <sect categorycode="System">
+    <title>System</title>
+    <sect categorycode="SystemAdministration">
+      <title>Administration</title>
+      <sect categorycode="SystemAdministrationBackups">
+        <title>Säkerhetskopior</title>
+        <sect categorycode="SystemAdministrationBackupsLocal">
+          <title>Lokal</title>
+          </sect>
+        <sect categorycode="SystemAdministrationBackupsRemote">
+          <title>Fjärr</title>
+          </sect>
+      </sect>
+      <sect categorycode="SystemAdministrationFilesystems">
+        <title>Filsystem</title>
+        </sect>
+      <sect categorycode="SystemAdministrationNetworking">
+        <title>Nätverk</title>
+        <sect categorycode="SystemAdministrationNetworkingAppleTalk">
+          <title>AppleTalk</title>
+          </sect>
+        <sect categorycode="SystemAdministrationNetworkingPPP">
+          <title>PPP</title>
+          </sect>
+        <sect categorycode="SystemAdministrationNetworkingSMB">
+          <title>SMB</title>
+          </sect>
+        <sect categorycode="SystemAdministrationNetworkingTCP/IP">
+          <title>TCP/IP</title>
+          </sect>
+        <sect categorycode="SystemAdministrationNetworkingDNS">
+          <title>DNS</title>
+          </sect>
+        <sect categorycode="SystemAdministrationNetworkingOther">
+          <title>Annat</title>
+          </sect>
+      </sect>
+      <sect categorycode="SystemAdministrationUsers">
+        <title>Användare</title>
+        </sect>
+      <sect categorycode="SystemAdministrationOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+    <sect categorycode="SystemConfiguration">
+      <title>Konfiguration</title>
+      <sect categorycode="SystemConfigurationConfig Files">
+        <title>Konfigurationsfiler</title>
+        </sect>
+      <sect categorycode="SystemConfigurationConfiguration Tools">
+        <title>Konfigurationsverktyg</title>
+        </sect>
+      <sect categorycode="SystemConfigurationOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+    <sect categorycode="SystemHardware">
+      <title>Hårdvara</title>
+      <sect categorycode="SystemHardwareProcessor">
+        <title>Processor</title>
+        </sect>
+      <sect categorycode="SystemHardwareStorage">
+        <title>Lagring</title>
+        </sect>
+      <sect categorycode="SystemHardwareVideo">
+        <title>Video</title>
+        </sect>
+      <sect categorycode="SystemHardwareInput Devices">
+        <title>Inmatningsenheter</title>
+        </sect>
+      <sect categorycode="SystemHardwareNetworking">
+        <title>Nätverk</title>
+        </sect>
+      <sect categorycode="SystemHardwarePCI/ISA/PCMCIA">
+        <title>PCI/ISA/PCMCIA</title>
+        </sect>
+      <sect categorycode="SystemHardwareOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+    <sect categorycode="SystemPackage Management">
+      <title>Pakethantering</title>
+      </sect>
+    <sect categorycode="SystemSecurity">
+      <title>Säkerhet</title>
+      <sect categorycode="SystemSecurityFirewall">
+        <title>Brandvägg</title>
+        </sect>
+      <sect categorycode="SystemSecurityIntrusion Detection">
+        <title>Intrångsupptäckt</title>
+        </sect>
+      <sect categorycode="SystemSecurityVirus">
+        <title>Virus</title>
+        </sect>
+      <sect categorycode="SystemSecurityOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+    <sect categorycode="SystemServices">
+      <title>Tjänster</title>
+      <sect categorycode="SystemServicesHTTP">
+        <title>HTTP</title>
+        </sect>
+      <sect categorycode="SystemServicesFTP">
+        <title>FTP</title>
+        </sect>
+      <sect categorycode="SystemServicesSMB">
+        <title>SMB</title>
+        </sect>
+      <sect categorycode="SystemServicesSSH">
+        <title>SSH</title>
+        </sect>
+      <sect categorycode="SystemServicesTelnet">
+        <title>Telnet</title>
+        </sect>
+      <sect categorycode="SystemServicesSyslog">
+        <title>Syslog</title>
+        </sect>
+      <sect categorycode="SystemServicesBIND">
+        <title>BIND</title>
+        </sect>
+      <sect categorycode="SystemServicesPrinting">
+        <title>Utskrift</title>
+        </sect>
+      <sect categorycode="SystemServicesOther">
+        <title>Annat</title>
+        </sect>
+    </sect>
+    <sect categorycode="SystemOther">
+      <title>Annat</title>
+      </sect>
+  </sect>
+</ScrollKeeperContentsList>

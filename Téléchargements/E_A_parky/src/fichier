@@ -1,0 +1,38 @@
+ FILE * f=fopen("parking.txt", "r");
+    if(f!=NULL){
+	while(fscanf(f,"%s %s %s %s %s \n",p.id,p.nomparking,p.capacite,p.nbplacesdispo,p.adresse)!=EOF){
+	printf("Id°: %s\n" , p.id);
+	printf("Nom : %s \n" , p.nomparking);
+	printf("capacite : %s\n" , p.capacite);
+	printf("Nb de places disponibles: %s\n" , p.nbplacesdispo);
+        printf("adresse : %s\n" , p.adresse); 
+        }
+        }
+  fclose(f);  
+  return 1;
+
+callbacks
+    GtkWidget *ctree1;
+    GtkCTreeNode *node;
+    gchar *titles[] = {"ID", "Nom"};
+    gchar id[50], nomparking[50];
+    FILE *f;
+
+   
+    ctree1 = lookup_widget(GTK_WIDGET(button), "ctree1");
+
+
+  
+    f = fopen("parking.txt", "r");
+    if (f == NULL) {
+        g_warning("Impossible d'ouvrir le fichier parking.txt");
+        return;
+    }
+
+    
+    while (fscanf(f, "%s %s %*s %*s %*s\n", id, nomparking) != EOF) { 
+        gchar *data[] = {id, nomparking};
+        node = gtk_ctree_insert_node(GTK_CTREE(ctree1), NULL, NULL, data, 0, NULL, NULL, NULL, NULL, FALSE, FALSE);
+    }
+
+    fclose(f);

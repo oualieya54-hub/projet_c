@@ -1,0 +1,8 @@
+parking 458 parking* 300 500 
+parky 45 parki 500 300 
+park p2 p2 20 10 
+pa f 1 1 f 
+123456 p 687 98 z4 
+745 r 1 45 e 
+30 parking1 300 500 parking 
+30 parking1 300 500 parking 

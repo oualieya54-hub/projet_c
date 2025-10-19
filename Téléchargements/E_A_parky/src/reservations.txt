@@ -1,0 +1,18 @@
+R001 123 15 12 2024 P001 50 Parking_Centre IDP001 S001 Service_Lavage 20.40
+R002 123 20 12 2024 P002 30 Parking_Nord IDP002 S001 Service_Gardiennage 30.0
+R003 124 10 01 2025 P003 40 Parking_Ouest IDP003 S002 Service_Lavage 25.00
+R004 125 05 02 2025 P004 60 Parking_Sud IDP004 S003 Service_Gardiennage 35.50
+R005 126 18 03 2025 P005 45 Parking_Central IDP005 S004 Service_Lavage 22.30
+R006 127 25 04 2025 P006 55 Parking_Est IDP006 S005 Service_Réparation 50.00
+R007 128 08 05 2025 P007 35 Parking_Nord IDP007 S006 Service_Gardiennage 28.90
+R008 129 20 06 2025 P008 25 Parking_Ville IDP008 S001 Service_Lavage 20.00
+
+
+
+
+
+
+
+
+
+
