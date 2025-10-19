@@ -1,3 +1,0 @@
-glade_gnome.o: glade_gnome.c /usr/include/stdc-predef.h ../config.h
-/usr/include/stdc-predef.h:
-../config.h:
