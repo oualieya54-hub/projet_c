@@ -21,3 +21,8 @@ GtkWidget* create_equipments_ajouter (void);
 GtkWidget* create_equipment_main (void);
 GtkWidget* create_equipments_modifier (void);
 GtkWidget* create_reserver_equipments (void);
+GtkWidget* create_GestionSalle (void);
+GtkWidget* create_suppDailogue (void);
+GtkWidget* create_AjoutSalle (void);
+GtkWidget* create_inscritsalle (void);
+GtkWidget* create_MOdiffSalle (void);
