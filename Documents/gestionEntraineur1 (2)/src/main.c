@@ -42,4 +42,8 @@ int main (int argc, char *argv[]) {
     else
         printf("❌ Salle introuvable pour suppression.\n\n");
 
+
+
+afficher_salles(filename);
+
 return 0; }

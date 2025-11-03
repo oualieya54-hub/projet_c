@@ -128,4 +128,38 @@ SalleSport chercher_salle(char *filename, char *nom)
     return s;
 }
 
+void afficher_salles(char *filename)
+{
+    SalleSport s;
+    FILE *f = fopen(filename, "r");
+
+    if (f == NULL)
+    {
+        printf("❌ Erreur : impossible d'ouvrir le fichier %s\n", filename);
+        return;
+    }
+
+    printf("\n===== Liste des salles =====\n");
+
+    while (fscanf(f, "%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%f;%d;%d;%d\n",
+                  s.nom, s.adresse, s.telephone, s.email,
+                  s.mode_paiement, s.heure_debut, s.heure_fin,
+                  &s.tarif, &s.capacite, &s.espace_restauration, &s.type_abonnement) != EOF)
+    {
+        printf("Nom : %s\n", s.nom);
+        printf("Adresse : %s\n", s.adresse);
+        printf("Téléphone : %s\n", s.telephone);
+        printf("Email : %s\n", s.email);
+        printf("Mode de paiement : %s\n", s.mode_paiement);
+        printf("Heure d'ouverture : %s\n", s.heure_debut);
+        printf("Heure de fermeture : %s\n", s.heure_fin);
+        printf("Tarif : %.2f\n", s.tarif);
+        printf("Capacité : %d\n", s.capacite);
+        printf("Espace restauration : %d\n", s.espace_restauration);
+        printf("Type d'abonnement : %d\n", s.type_abonnement);
+        printf("-------------------------------------------\n");
+    }
+
+    fclose(f);
+}
 
