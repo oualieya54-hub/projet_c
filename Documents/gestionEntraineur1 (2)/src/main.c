@@ -45,5 +45,5 @@ int main (int argc, char *argv[]) {
 
 
 afficher_salles(filename);
-
+    chercher_salle_avec_ecriture("salles.txt", "BodyZone", "resultat.txt");
 return 0; }

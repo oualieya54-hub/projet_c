@@ -23,6 +23,6 @@ int modifier_salle(char *filename, char *nom, SalleSport nouv);
 int supprimer_salle(char *filename, char *nom);
 SalleSport chercher_salle(char *filename, char *nom);
 void afficher_salles(char *filename);
-
+void chercher_salle_avec_ecriture(char *filename, char *nom_recherche, char *fichier_resultat);
 #endif // SALLE_H
 

@@ -162,4 +162,45 @@ void afficher_salles(char *filename)
 
     fclose(f);
 }
+void chercher_salle_avec_ecriture(char *filename, char *nom_recherche, char *fichier_resultat)
+{
+    SalleSport s;
+    int trouve = 0;
+    FILE *f = fopen(filename, "r");          // Fichier d'origine
+    FILE *fout = fopen(fichier_resultat, "w"); // Fichier de résultat (on écrase le contenu)
+
+    if (f == NULL || fout == NULL)
+    {
+        printf("Erreur d'ouverture de fichier.\n");
+        return;
+    }
+
+    while (fscanf(f, "%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%f;%d;%d;%d\n",
+                  s.nom, s.adresse, s.telephone, s.email,
+                  s.mode_paiement, s.heure_debut, s.heure_fin,
+                  &s.tarif, &s.capacite, &s.espace_restauration, &s.type_abonnement) != EOF)
+    {
+        if (strcmp(s.nom, nom_recherche) == 0)
+        {
+            trouve = 1;
+
+            // Écriture des informations trouvées dans le fichier résultat
+            fprintf(fout, "Nom: %s\nAdresse: %s\nTéléphone: %s\nEmail: %s\n", 
+                    s.nom, s.adresse, s.telephone, s.email);
+            fprintf(fout, "Paiement: %s\nHeure début: %s\nHeure fin: %s\n", 
+                    s.mode_paiement, s.heure_debut, s.heure_fin);
+            fprintf(fout, "Tarif: %.2f\nCapacité: %d\nEspace resto: %d\nType abo: %d\n", 
+                    s.tarif, s.capacite, s.espace_restauration, s.type_abonnement);
+            break; // on arrête après avoir trouvé
+        }
+    }
+
+    fclose(f);
+    fclose(fout);
+
+    if (trouve)
+        printf("Salle trouvée et enregistrée dans '%s'.\n", fichier_resultat);
+    else
+        printf("Salle non trouvée.\n");
+}
 
