@@ -3165,12 +3165,8 @@ create_AjoutSalle (void)
   GtkWidget *optionmenu1;
   GtkWidget *label204;
   GtkWidget *label205;
-  GtkWidget *label203;
   GtkWidget *label197;
   GtkWidget *label206;
-  GtkWidget *radiobutton2;
-  GSList *radiobutton2_group = NULL;
-  GtkWidget *radiobutton1;
   GtkWidget *button36;
   GtkWidget *alignment29;
   GtkWidget *hbox77;
@@ -3181,6 +3177,15 @@ create_AjoutSalle (void)
   GtkWidget *hbox78;
   GtkWidget *image29;
   GtkWidget *label208;
+  GtkWidget *label203;
+  GtkWidget *radiobutton1;
+  GSList *radiobutton1_group = NULL;
+  GtkWidget *radiobutton2;
+  GtkWidget *checkbutton1;
+  GtkWidget *checkbutton2;
+  GtkWidget *checkbutton3;
+  GtkWidget *checkbutton4;
+  GtkWidget *label264;
 
   AjoutSalle = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_size_request (AjoutSalle, 900, 550);
@@ -3194,6 +3199,7 @@ create_AjoutSalle (void)
   gtk_widget_show (entry37);
   gtk_fixed_put (GTK_FIXED (fixed2), entry37, 184, 40);
   gtk_widget_set_size_request (entry37, 172, 35);
+  gtk_entry_set_text (GTK_ENTRY (entry37), _("z"));
   gtk_entry_set_invisible_char (GTK_ENTRY (entry37), 8226);
 
   entry38 = gtk_entry_new ();
@@ -3229,7 +3235,7 @@ create_AjoutSalle (void)
   spinbutton1_adj = gtk_adjustment_new (4, 0, 100, 1, 10, 10);
   spinbutton1 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton1_adj), 1, 0);
   gtk_widget_show (spinbutton1);
-  gtk_fixed_put (GTK_FIXED (fixed2), spinbutton1, 408, 432);
+  gtk_fixed_put (GTK_FIXED (fixed2), spinbutton1, 184, 432);
   gtk_widget_set_size_request (spinbutton1, 70, 35);
 
   spinbutton2_adj = gtk_adjustment_new (1, 0, 100, 1, 10, 10);
@@ -3278,11 +3284,6 @@ create_AjoutSalle (void)
   gtk_fixed_put (GTK_FIXED (fixed2), label205, 48, 288);
   gtk_widget_set_size_request (label205, 90, 18);
 
-  label203 = gtk_label_new (_("Esapce\nRestauration :"));
-  gtk_widget_show (label203);
-  gtk_fixed_put (GTK_FIXED (fixed2), label203, 32, 352);
-  gtk_widget_set_size_request (label203, 145, 40);
-
   label197 = gtk_label_new (_("Nom :"));
   gtk_widget_show (label197);
   gtk_fixed_put (GTK_FIXED (fixed2), label197, 56, 48);
@@ -3292,20 +3293,6 @@ create_AjoutSalle (void)
   gtk_widget_show (label206);
   gtk_fixed_put (GTK_FIXED (fixed2), label206, 40, 440);
   gtk_widget_set_size_request (label206, 100, 18);
-
-  radiobutton2 = gtk_radio_button_new_with_mnemonic (NULL, _("non"));
-  gtk_widget_show (radiobutton2);
-  gtk_fixed_put (GTK_FIXED (fixed2), radiobutton2, 528, 368);
-  gtk_widget_set_size_request (radiobutton2, 116, 23);
-  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton2), radiobutton2_group);
-  radiobutton2_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton2));
-
-  radiobutton1 = gtk_radio_button_new_with_mnemonic (NULL, _("oui"));
-  gtk_widget_show (radiobutton1);
-  gtk_fixed_put (GTK_FIXED (fixed2), radiobutton1, 288, 368);
-  gtk_widget_set_size_request (radiobutton1, 116, 23);
-  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton1), radiobutton2_group);
-  radiobutton2_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton1));
 
   button36 = gtk_button_new ();
   gtk_widget_show (button36);
@@ -3349,6 +3336,50 @@ create_AjoutSalle (void)
   gtk_widget_show (label208);
   gtk_box_pack_start (GTK_BOX (hbox78), label208, FALSE, FALSE, 0);
 
+  label203 = gtk_label_new (_("Esapce\nRestauration :"));
+  gtk_widget_show (label203);
+  gtk_fixed_put (GTK_FIXED (fixed2), label203, 32, 352);
+  gtk_widget_set_size_request (label203, 145, 40);
+
+  radiobutton1 = gtk_radio_button_new_with_mnemonic (NULL, _("oui"));
+  gtk_widget_show (radiobutton1);
+  gtk_fixed_put (GTK_FIXED (fixed2), radiobutton1, 184, 360);
+  gtk_widget_set_size_request (radiobutton1, 116, 23);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton1), radiobutton1_group);
+  radiobutton1_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton1));
+
+  radiobutton2 = gtk_radio_button_new_with_mnemonic (NULL, _("non"));
+  gtk_widget_show (radiobutton2);
+  gtk_fixed_put (GTK_FIXED (fixed2), radiobutton2, 288, 360);
+  gtk_widget_set_size_request (radiobutton2, 116, 23);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton2), radiobutton1_group);
+  radiobutton1_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton2));
+
+  checkbutton1 = gtk_check_button_new_with_mnemonic (_("Mensuel"));
+  gtk_widget_show (checkbutton1);
+  gtk_fixed_put (GTK_FIXED (fixed2), checkbutton1, 600, 352);
+  gtk_widget_set_size_request (checkbutton1, 117, 23);
+
+  checkbutton2 = gtk_check_button_new_with_mnemonic (_("Trimestriel"));
+  gtk_widget_show (checkbutton2);
+  gtk_fixed_put (GTK_FIXED (fixed2), checkbutton2, 600, 384);
+  gtk_widget_set_size_request (checkbutton2, 117, 23);
+
+  checkbutton3 = gtk_check_button_new_with_mnemonic (_("Annuel"));
+  gtk_widget_show (checkbutton3);
+  gtk_fixed_put (GTK_FIXED (fixed2), checkbutton3, 600, 416);
+  gtk_widget_set_size_request (checkbutton3, 117, 23);
+
+  checkbutton4 = gtk_check_button_new_with_mnemonic (_("Acc\303\251s Libre"));
+  gtk_widget_show (checkbutton4);
+  gtk_fixed_put (GTK_FIXED (fixed2), checkbutton4, 600, 448);
+  gtk_widget_set_size_request (checkbutton4, 117, 23);
+
+  label264 = gtk_label_new (_("Type d'abonnement :"));
+  gtk_widget_show (label264);
+  gtk_fixed_put (GTK_FIXED (fixed2), label264, 408, 352);
+  gtk_widget_set_size_request (label264, 145, 40);
+
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (AjoutSalle, AjoutSalle, "AjoutSalle");
   GLADE_HOOKUP_OBJECT (AjoutSalle, fixed2, "fixed2");
@@ -3368,11 +3399,8 @@ create_AjoutSalle (void)
   GLADE_HOOKUP_OBJECT (AjoutSalle, optionmenu1, "optionmenu1");
   GLADE_HOOKUP_OBJECT (AjoutSalle, label204, "label204");
   GLADE_HOOKUP_OBJECT (AjoutSalle, label205, "label205");
-  GLADE_HOOKUP_OBJECT (AjoutSalle, label203, "label203");
   GLADE_HOOKUP_OBJECT (AjoutSalle, label197, "label197");
   GLADE_HOOKUP_OBJECT (AjoutSalle, label206, "label206");
-  GLADE_HOOKUP_OBJECT (AjoutSalle, radiobutton2, "radiobutton2");
-  GLADE_HOOKUP_OBJECT (AjoutSalle, radiobutton1, "radiobutton1");
   GLADE_HOOKUP_OBJECT (AjoutSalle, button36, "button36");
   GLADE_HOOKUP_OBJECT (AjoutSalle, alignment29, "alignment29");
   GLADE_HOOKUP_OBJECT (AjoutSalle, hbox77, "hbox77");
@@ -3383,6 +3411,14 @@ create_AjoutSalle (void)
   GLADE_HOOKUP_OBJECT (AjoutSalle, hbox78, "hbox78");
   GLADE_HOOKUP_OBJECT (AjoutSalle, image29, "image29");
   GLADE_HOOKUP_OBJECT (AjoutSalle, label208, "label208");
+  GLADE_HOOKUP_OBJECT (AjoutSalle, label203, "label203");
+  GLADE_HOOKUP_OBJECT (AjoutSalle, radiobutton1, "radiobutton1");
+  GLADE_HOOKUP_OBJECT (AjoutSalle, radiobutton2, "radiobutton2");
+  GLADE_HOOKUP_OBJECT (AjoutSalle, checkbutton1, "checkbutton1");
+  GLADE_HOOKUP_OBJECT (AjoutSalle, checkbutton2, "checkbutton2");
+  GLADE_HOOKUP_OBJECT (AjoutSalle, checkbutton3, "checkbutton3");
+  GLADE_HOOKUP_OBJECT (AjoutSalle, checkbutton4, "checkbutton4");
+  GLADE_HOOKUP_OBJECT (AjoutSalle, label264, "label264");
 
   return AjoutSalle;
 }
@@ -3652,6 +3688,11 @@ create_MOdiffSalle (void)
   GtkWidget *hbox88;
   GtkWidget *image39;
   GtkWidget *label263;
+  GtkWidget *label265;
+  GtkWidget *checkbutton5;
+  GtkWidget *checkbutton6;
+  GtkWidget *checkbutton7;
+  GtkWidget *checkbutton8;
 
   MOdiffSalle = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_size_request (MOdiffSalle, 900, 550);
@@ -3820,6 +3861,31 @@ create_MOdiffSalle (void)
   gtk_widget_show (label263);
   gtk_box_pack_start (GTK_BOX (hbox88), label263, FALSE, FALSE, 0);
 
+  label265 = gtk_label_new (_("Type_Abonnement :"));
+  gtk_widget_show (label265);
+  gtk_fixed_put (GTK_FIXED (fixed10), label265, 648, 328);
+  gtk_widget_set_size_request (label265, 145, 40);
+
+  checkbutton5 = gtk_check_button_new_with_mnemonic (_("Mensuel"));
+  gtk_widget_show (checkbutton5);
+  gtk_fixed_put (GTK_FIXED (fixed10), checkbutton5, 664, 368);
+  gtk_widget_set_size_request (checkbutton5, 117, 23);
+
+  checkbutton6 = gtk_check_button_new_with_mnemonic (_("Trimestriel"));
+  gtk_widget_show (checkbutton6);
+  gtk_fixed_put (GTK_FIXED (fixed10), checkbutton6, 664, 392);
+  gtk_widget_set_size_request (checkbutton6, 117, 23);
+
+  checkbutton7 = gtk_check_button_new_with_mnemonic (_("Annuel"));
+  gtk_widget_show (checkbutton7);
+  gtk_fixed_put (GTK_FIXED (fixed10), checkbutton7, 664, 416);
+  gtk_widget_set_size_request (checkbutton7, 117, 23);
+
+  checkbutton8 = gtk_check_button_new_with_mnemonic (_("Acc\303\251s Libre"));
+  gtk_widget_show (checkbutton8);
+  gtk_fixed_put (GTK_FIXED (fixed10), checkbutton8, 664, 440);
+  gtk_widget_set_size_request (checkbutton8, 117, 23);
+
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (MOdiffSalle, MOdiffSalle, "MOdiffSalle");
   GLADE_HOOKUP_OBJECT (MOdiffSalle, fixed10, "fixed10");
@@ -3854,6 +3920,11 @@ create_MOdiffSalle (void)
   GLADE_HOOKUP_OBJECT (MOdiffSalle, hbox88, "hbox88");
   GLADE_HOOKUP_OBJECT (MOdiffSalle, image39, "image39");
   GLADE_HOOKUP_OBJECT (MOdiffSalle, label263, "label263");
+  GLADE_HOOKUP_OBJECT (MOdiffSalle, label265, "label265");
+  GLADE_HOOKUP_OBJECT (MOdiffSalle, checkbutton5, "checkbutton5");
+  GLADE_HOOKUP_OBJECT (MOdiffSalle, checkbutton6, "checkbutton6");
+  GLADE_HOOKUP_OBJECT (MOdiffSalle, checkbutton7, "checkbutton7");
+  GLADE_HOOKUP_OBJECT (MOdiffSalle, checkbutton8, "checkbutton8");
 
   return MOdiffSalle;
 }
