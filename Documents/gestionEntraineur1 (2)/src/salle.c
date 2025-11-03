@@ -204,3 +204,41 @@ void chercher_salle_avec_ecriture(char *filename, char *nom_recherche, char *fic
         printf("Salle non trouvée.\n");
 }
 
+
+void statistiques_salles(char *filename)
+{
+    SalleSport s;
+    FILE *f = fopen(filename, "r");
+    if (!f)
+    {
+        printf("Erreur : impossible d'ouvrir le fichier.\n");
+        return;
+    }
+
+    int nb_salles = 0;
+    int nb_resto = 0;
+    int abonnement[4] = {0, 0, 0, 0}; // 0=Mensuel, 1=Trimestriel, 2=Annuel, 3=Accès libre
+
+    while (fscanf(f, "%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%f;%d;%d;%d\n",
+                  s.nom, s.adresse, s.telephone, s.email,
+                  s.mode_paiement, s.heure_debut, s.heure_fin,
+                  &s.tarif, &s.capacite, &s.espace_restauration, &s.type_abonnement) != EOF)
+    {
+        nb_salles++;
+        if (s.espace_restauration) nb_resto++;
+        if (s.type_abonnement >= 0 && s.type_abonnement <= 3)
+            abonnement[s.type_abonnement]++;
+    }
+
+    fclose(f);
+
+    printf("Statistiques des salles :\n");
+    printf("Nombre total de salles : %d\n", nb_salles);
+    printf("Nombre de salles avec espace restauration : %d\n", nb_resto);
+    printf("Nombre de salles par type d'abonnement :\n");
+    printf("  Mensuel       : %d\n", abonnement[0]);
+    printf("  Trimestriel   : %d\n", abonnement[1]);
+    printf("  Annuel        : %d\n", abonnement[2]);
+    printf("  Accès libre   : %d\n", abonnement[3]);
+}
+
