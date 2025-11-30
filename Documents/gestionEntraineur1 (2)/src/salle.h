@@ -1,9 +1,10 @@
 #ifndef SALLE_H
 #define SALLE_H
-
+#include <gtk/gtk.h>
 
 
 typedef struct {
+int id_salle;
     char nom[50];
     char adresse[100];
     char telephone[20];
@@ -14,15 +15,21 @@ typedef struct {
     float tarif;
     int capacite;
     int espace_restauration; // 1 = oui, 0 = non
-    int type_abonnement; // 0=Mensuel, 1=Trimestriel, 2=Annuel, 3=Accès libre
+     char type_abonnement[20];
     
 } SalleSport;
 
+
 int ajouter_salle(char *filename, SalleSport s);
-int modifier_salle(char *filename, char *nom, SalleSport nouv);
-int supprimer_salle(char *filename, char *nom);
+void afficher_salles_interface(GtkWidget *ctree, const char *filename);
+int supprimer_salle(const char *filename, int id);
+
 SalleSport chercher_salle(char *filename, char *nom);
-void afficher_salles(char *filename);
-void chercher_salle_avec_ecriture(char *filename, char *nom_recherche, char *fichier_resultat);
+int modifier_salle(char *filename, const int id, SalleSport nouv);
+SalleSport chercher_salle_par_id(const char *filename, int id_recherche);
+
+
+//void chercher_salle_avec_ecriture(char *filename, char *nom_recherche, char *fichier_resultat);
+//void statistiques_salles(char *filename);*/
 #endif // SALLE_H
 

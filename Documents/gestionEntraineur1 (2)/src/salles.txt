@@ -1,2 +1,0 @@
-PowerFit;Sousse;20998877;contact@powerfit.tn;Carte;06:00;22:00;60.00;70;1;3
-BodyZone;Ariana;22112233;bodyzone@gmail.com;Virement;09:00;21:00;30.00;40;1;1

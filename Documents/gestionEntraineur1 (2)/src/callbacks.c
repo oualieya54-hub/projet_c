@@ -1,10 +1,651 @@
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
-
 #include <gtk/gtk.h>
-
+#include <string.h>
+#include "salle.h"
 #include "callbacks.h"
 #include "interface.h"
 #include "support.h"
+
+
+
+
+ char mode_paiement[30];
+void on_button35_clicked(GtkButton *button, gpointer user_data)
+{
+    GtkWidget *window_ajout = lookup_widget(button, "AjoutSalle");
+
+    // Récupération des champs texte
+    char nom[50], adresse[100], telephone[20], email[50];
+    char h_debut[10], h_fin[10];
+
+    strcpy(nom, gtk_entry_get_text(GTK_ENTRY(lookup_widget(window_ajout, "entry37"))));
+    strcpy(adresse, gtk_entry_get_text(GTK_ENTRY(lookup_widget(window_ajout, "entry38"))));
+    strcpy(telephone, gtk_entry_get_text(GTK_ENTRY(lookup_widget(window_ajout, "entry39"))));
+    strcpy(email, gtk_entry_get_text(GTK_ENTRY(lookup_widget(window_ajout, "entry40"))));
+    strcpy(h_debut, gtk_entry_get_text(GTK_ENTRY(lookup_widget(window_ajout, "entry41"))));
+    strcpy(h_fin, gtk_entry_get_text(GTK_ENTRY(lookup_widget(window_ajout, "entry43"))));
+
+    if (strlen(mode_paiement) == 0)
+        strcpy(mode_paiement, "Non défini");
+
+    int espace_restauration = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "radiobutton1")));
+
+    char type_abonnement[20] = "Non défini";
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton1")))) strcpy(type_abonnement, "Mensuel");
+    else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton2")))) strcpy(type_abonnement, "Trimestriel");
+    else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton3")))) strcpy(type_abonnement, "Annuel");
+    else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton4")))) strcpy(type_abonnement, "Accès libre");
+
+    int capacite = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(lookup_widget(window_ajout, "spinbutton1")));
+    float tarif = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(lookup_widget(window_ajout, "spinbutton2")));
+
+    SalleSport s;
+    s.id_salle = generer_nouvel_id("salle.txt");
+    strcpy(s.nom, nom);
+    strcpy(s.adresse, adresse);
+    strcpy(s.telephone, telephone);
+    strcpy(s.email, email);
+    strcpy(s.heure_debut, h_debut);
+    strcpy(s.heure_fin, h_fin);
+    strcpy(s.mode_paiement, mode_paiement);
+    s.capacite = capacite;
+    s.tarif = tarif;
+    s.espace_restauration = espace_restauration;
+    strcpy(s.type_abonnement, type_abonnement);
+
+    if (ajouter_salle("salle.txt", s))
+    {
+        // ✅ Fermer le formulaire
+        gtk_widget_destroy(window_ajout);
+
+        // ✅ Trouver la fenêtre GestionSalle existante
+        GtkWidget *window_gestion = NULL;
+        GList *toplevels = gtk_window_list_toplevels();
+        for (GList *l = toplevels; l; l = l->next)
+        {
+            GtkWidget *w = GTK_WIDGET(l->data);
+            if (GTK_IS_WINDOW(w) && 
+                g_str_equal(gtk_widget_get_name(w), "GestionSalle"))
+            {
+                window_gestion = w;
+                break;
+            }
+        }
+        g_list_free(toplevels);
+
+        // Si on la trouve, rafraîchir son TreeView
+        if (window_gestion)
+        {
+            GtkWidget *treeview = lookup_widget(window_gestion, "treeview3");
+            if (treeview)
+            {
+                afficher_salles_interface(treeview, "salle.txt");
+            }
+        }
+        else
+        {
+            // En dernier recours, recréer (mais cela ne devrait pas arriver)
+            window_gestion = create_GestionSalle();
+            GtkWidget *treeview = lookup_widget(window_gestion, "treeview3");
+            afficher_salles_interface(treeview, "salle.txt");
+            gtk_widget_show(window_gestion);
+        }
+    }
+    else
+    {
+        g_warning("Erreur d'ajout de salle !");
+    }
+}
+
+
+void
+on_button36_clicked                    (GtkButton       *button,
+                                        gpointer         user_data)
+{
+    GtkWidget *window = lookup_widget(button, "AjoutSalle");
+    gtk_widget_destroy(window);
+}
+
+
+void
+on_esp__ce1_activate                   (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+ strcpy(mode_paiement, "Espece");
+}
+
+
+void
+on_ch__que1_activate                   (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+   strcpy(mode_paiement, "Cheque");
+}
+
+
+void
+on_cartebancaire1_activate             (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    strcpy(mode_paiement, "Carte Bancaire");
+}
+
+
+void
+on_virement1_activate                  (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+ strcpy(mode_paiement, "Virement");
+}
+
+
+
+
+// ==================== SUPPRESSION ====================
+
+// Structure pour passer les données au callback idle
+typedef struct {
+    GtkWidget *treeview;
+    char nom_supprime[50];
+} RefreshData;
+
+// Fonction callback qui sera appelée quand GTK est idle
+static gboolean rafraichir_treeview_idle(gpointer data)
+{
+    RefreshData *refresh = (RefreshData *)data;
+    
+    printf("Rafraichissement du TreeView en idle...\n");
+    afficher_salles_interface(refresh->treeview, "salle.txt");
+    printf("TreeView rafraichi\n");
+    
+    // Libérer la mémoire
+    g_free(refresh);
+    
+    // Retourner FALSE pour ne pas rappeler cette fonction
+    return FALSE;
+}
+
+void on_button34_clicked(GtkButton *button, gpointer user_data)
+{
+    GtkWidget *window_gestion = lookup_widget(button, "GestionSalle");
+    GtkWidget *treeview = lookup_widget(window_gestion, "treeview3");
+    
+    // Obtenir la sélection
+    GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+    GtkTreeModel *model;
+    GtkTreeIter iter;
+    
+    // Vérifier qu'une ligne est sélectionnée
+    if (!gtk_tree_selection_get_selected(selection, &model, &iter))
+    {
+        GtkWidget *dialog = gtk_message_dialog_new(
+            GTK_WINDOW(window_gestion),
+            GTK_DIALOG_MODAL,
+            GTK_MESSAGE_WARNING,
+            GTK_BUTTONS_OK,
+            "Veuillez sélectionner une salle à supprimer !"
+        );
+        gtk_window_set_title(GTK_WINDOW(dialog), "Aucune sélection");
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+        return;
+    }
+    
+    // Récupérer l'ID de la salle sélectionnée (colonne 0)
+    int id_salle;
+    gtk_tree_model_get(model, &iter, 0, &id_salle, -1);
+    
+    printf("Salle sélectionnée avec ID : %d\n", id_salle);
+    
+    // ====== Dialogue de confirmation ======
+    GtkWidget *dialog_confirm = gtk_message_dialog_new(
+        GTK_WINDOW(window_gestion),
+        GTK_DIALOG_MODAL,
+        GTK_MESSAGE_QUESTION,
+        GTK_BUTTONS_YES_NO,
+        "Êtes-vous sûr de vouloir supprimer la salle avec l'ID :\n\n%d ?",
+        id_salle
+    );
+    gtk_window_set_title(GTK_WINDOW(dialog_confirm), "Confirmation de suppression");
+    
+    // Attendre la réponse
+    int response = gtk_dialog_run(GTK_DIALOG(dialog_confirm));
+    gtk_widget_destroy(dialog_confirm);
+    
+    if (response == GTK_RESPONSE_YES)
+    {
+        printf("Confirmation reçue, suppression en cours...\n");
+        
+        int resultat = supprimer_salle("salle.txt", id_salle);
+        
+        if (resultat == 1)
+        {
+            printf("Suppression réussie de la salle ID %d\n", id_salle);
+            
+            // Rafraîchir le TreeView via g_idle_add (meilleure pratique)
+            RefreshData *refresh = g_malloc(sizeof(RefreshData));
+            refresh->treeview = treeview;
+            // On ne stocke plus le nom, mais on pourrait stocker l'ID si besoin
+            // Pour ce rafraîchissement, on recharge tout → pas besoin de plus
+            
+            g_idle_add(rafraichir_treeview_idle, refresh);
+            printf("Rafraîchissement planifié\n");
+        }
+        else
+        {
+            printf("Échec de la suppression\n");
+            
+            GtkWidget *dialog_error = gtk_message_dialog_new(
+                GTK_WINDOW(window_gestion),
+                GTK_DIALOG_MODAL,
+                GTK_MESSAGE_ERROR,
+                GTK_BUTTONS_OK,
+                "Erreur lors de la suppression de la salle !"
+            );
+            gtk_dialog_run(GTK_DIALOG(dialog_error));
+            gtk_widget_destroy(dialog_error);
+        }
+    }
+    else
+    {
+        printf("Suppression annulée par l'utilisateur\n");
+    }
+    
+    printf("Fin de on_button34_clicked\n");
+}
+// ==================== BOUTON AJOUTER dans GestionSalle ====================
+void on_button32_clicked(GtkButton *button, gpointer user_data)
+{
+    GtkWidget *window_ajout = create_AjoutSalle();
+    gtk_widget_show(window_ajout);
+}
+
+
+void on_entry36_changed(GtkEditable *editable, gpointer user_data)
+{
+    GtkWidget *entry = GTK_WIDGET(editable);
+    GtkWidget *window_gestion = gtk_widget_get_toplevel(entry);
+    GtkWidget *treeview = lookup_widget(window_gestion, "treeview3");
+    
+    const char *texte = gtk_entry_get_text(GTK_ENTRY(entry));
+    
+    // Si vide, afficher tout
+    if (strlen(texte) == 0)
+    {
+        afficher_salles_interface(treeview, "salle.txt");
+        return;
+    }
+    
+    // Créer le modèle pour les résultats
+    GtkListStore *store = gtk_list_store_new(12, 
+        G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING,
+        G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, 
+        G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+    
+    // Ouvrir le fichier et chercher dans tous les champs
+    FILE *f = fopen("salle.txt", "r");
+    if (!f)
+    {
+        gtk_tree_view_set_model(GTK_TREE_VIEW(treeview), GTK_TREE_MODEL(store));
+        g_object_unref(store);
+        return;
+    }
+    
+    char ligne[512];
+    int nb_resultats = 0;
+    
+    // Convertir le texte de recherche en minuscules pour comparaison
+    char texte_lower[100];
+    strncpy(texte_lower, texte, 99);
+    texte_lower[99] = '\0';
+    for (int i = 0; texte_lower[i]; i++) {
+        texte_lower[i] = tolower(texte_lower[i]);
+    }
+    
+    while (fgets(ligne, sizeof(ligne), f))
+    {
+        SalleSport s;
+        int nb = sscanf(ligne, 
+            "%d;%49[^;];%99[^;];%19[^;];%49[^;];%29[^;];%9[^;];%9[^;];%f;%d;%d;%19[^\n]",
+            &s.id_salle, s.nom, s.adresse, s.telephone, s.email,
+            s.mode_paiement, s.heure_debut, s.heure_fin,
+            &s.tarif, &s.capacite, &s.espace_restauration, s.type_abonnement);
+        
+        if (nb != 12) continue;
+        
+        // Créer une chaîne avec tous les champs pour la recherche
+        char tous_champs[1000];
+        char buf_id[20], buf_tarif[20], buf_cap[20], buf_eres[20];
+        sprintf(buf_id, "%d", s.id_salle);
+        sprintf(buf_tarif, "%.2f", s.tarif);
+        sprintf(buf_cap, "%d", s.capacite);
+        sprintf(buf_eres, "%s", s.espace_restauration ? "Oui" : "Non");
+        
+        snprintf(tous_champs, sizeof(tous_champs), "%s %s %s %s %s %s %s %s %s %s %s %s",
+                 buf_id, s.nom, s.adresse, s.telephone, s.email,
+                 s.mode_paiement, s.heure_debut, s.heure_fin,
+                 buf_tarif, buf_cap, buf_eres, s.type_abonnement);
+        
+        // Convertir en minuscules
+        for (int i = 0; tous_champs[i]; i++) {
+            tous_champs[i] = tolower(tous_champs[i]);
+        }
+        
+        // Vérifier si le texte recherché est présent
+        if (strstr(tous_champs, texte_lower) != NULL)
+        {
+            GtkTreeIter iter;
+            
+            char buf_tarif_display[20], buf_cap_display[10], buf_eres_display[10];
+            sprintf(buf_tarif_display, "%.2f DT", s.tarif);
+            sprintf(buf_cap_display, "%d", s.capacite);
+            sprintf(buf_eres_display, "%s", s.espace_restauration ? "Oui" : "Non");
+            
+            gtk_list_store_append(store, &iter);
+            gtk_list_store_set(store, &iter,
+                0, s.id_salle,
+                1, s.nom, 
+                2, s.adresse, 
+                3, s.telephone, 
+                4, s.email,
+                5, s.heure_debut, 
+                6, s.heure_fin, 
+                7, buf_tarif_display,
+                8, s.mode_paiement, 
+                9, buf_cap_display, 
+                10, buf_eres_display,
+                11, s.type_abonnement, 
+                -1);
+            
+            nb_resultats++;
+        }
+    }
+    
+    fclose(f);
+    
+    // Si aucun résultat, afficher tout
+    if (nb_resultats == 0)
+    {
+        g_object_unref(store);
+        afficher_salles_interface(treeview, "salle.txt");
+    }
+    else
+    {
+        gtk_tree_view_set_model(GTK_TREE_VIEW(treeview), GTK_TREE_MODEL(store));
+        g_object_unref(store);
+    }
+    
+    printf("Recherche '%s' : %d résultat(s) trouvé(s)\n", texte, nb_resultats);
+}
+void on_button33_clicked(GtkButton *button, gpointer user_data)
+{
+    GtkWidget *window_gestion = lookup_widget(button, "GestionSalle");
+    GtkWidget *treeview = lookup_widget(window_gestion, "treeview3");
+
+    GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+    GtkTreeModel *model;
+    GtkTreeIter iter;
+
+    if (!gtk_tree_selection_get_selected(selection, &model, &iter))
+    {
+        GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(window_gestion),
+                                                   GTK_DIALOG_MODAL,
+                                                   GTK_MESSAGE_WARNING,
+                                                   GTK_BUTTONS_OK,
+                                                   "Veuillez sélectionner une salle à modifier !");
+        gtk_window_set_title(GTK_WINDOW(dialog), "Aucune sélection");
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+        return;
+    }
+
+    // Récupérer l'ID (colonne 0)
+    int id_salle;
+    gtk_tree_model_get(model, &iter, 0, &id_salle, -1);
+
+    // Chercher la salle par ID (tu devras créer `chercher_salle_par_id`)
+    SalleSport s = chercher_salle_par_id("salle.txt", id_salle);
+    
+    // Si la salle n'est pas trouvée (id non valide)
+    if (s.id_salle == -1) {
+        GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(window_gestion),
+                                                   GTK_DIALOG_MODAL,
+                                                   GTK_MESSAGE_ERROR,
+                                                   GTK_BUTTONS_OK,
+                                                   "Erreur : salle introuvable.");
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+        return;
+    }
+
+    // Ouvrir la fenêtre de modification
+    GtkWidget *window_modif = create_MOdiffSalle();
+    
+    // Stocker l'ID pour le bouton "Modifier"
+    g_object_set_data(G_OBJECT(window_modif), "id_salle", GINT_TO_POINTER(id_salle));
+    
+  GtkWidget *entry56 = lookup_widget(window_modif, "entry56"); // Nom
+    GtkWidget *entry57 = lookup_widget(window_modif, "entry57"); // Adresse
+    GtkWidget *entry58 = lookup_widget(window_modif, "entry58"); // Téléphone
+    GtkWidget *entry59 = lookup_widget(window_modif, "entry59"); // Email
+    GtkWidget *entry60 = lookup_widget(window_modif, "entry60"); // Heure début
+    GtkWidget *entry61 = lookup_widget(window_modif, "entry61"); // Heure fin
+    GtkWidget *spinbutton21 = lookup_widget(window_modif, "spinbutton21"); // Capacité
+    GtkWidget *spinbutton22 = lookup_widget(window_modif, "spinbutton22"); // Tarif
+
+    gtk_entry_set_text(GTK_ENTRY(entry56), s.nom);
+    gtk_entry_set_text(GTK_ENTRY(entry57), s.adresse);
+    gtk_entry_set_text(GTK_ENTRY(entry58), s.telephone);
+    gtk_entry_set_text(GTK_ENTRY(entry59), s.email);
+    gtk_entry_set_text(GTK_ENTRY(entry60), s.heure_debut);
+    gtk_entry_set_text(GTK_ENTRY(entry61), s.heure_fin);
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinbutton21), s.capacite);
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinbutton22), s.tarif);
+
+    // --- Mode de paiement ---
+    GtkWidget *optionmenu2 = lookup_widget(window_modif, "optionmenu2");
+    if(optionmenu2)
+    {
+        if(strcmp(s.mode_paiement, "Espece") == 0)
+            gtk_option_menu_set_history(GTK_OPTION_MENU(optionmenu2), 0);
+        else if(strcmp(s.mode_paiement, "Cheque") == 0)
+            gtk_option_menu_set_history(GTK_OPTION_MENU(optionmenu2), 1);
+        else if(strcmp(s.mode_paiement, "Carte Bancaire") == 0)
+            gtk_option_menu_set_history(GTK_OPTION_MENU(optionmenu2), 2);
+        else if(strcmp(s.mode_paiement, "Virement") == 0)
+            gtk_option_menu_set_history(GTK_OPTION_MENU(optionmenu2), 3);
+    }
+
+    // Espace restauration
+    GtkWidget *radiobutton11 = lookup_widget(window_modif, "radiobutton11");
+    GtkWidget *radiobutton10 = lookup_widget(window_modif, "radiobutton10");
+    if (s.espace_restauration) gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(radiobutton11), TRUE);
+    else gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(radiobutton10), TRUE);
+
+    // Checkbuttons
+    GtkWidget *cb_mensuel = lookup_widget(window_modif, "checkbutton5");
+    GtkWidget *cb_trimestriel = lookup_widget(window_modif, "checkbutton6");
+    GtkWidget *cb_annuel = lookup_widget(window_modif, "checkbutton7");
+    GtkWidget *cb_libre = lookup_widget(window_modif, "checkbutton8");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cb_mensuel), strcmp(s.type_abonnement, "Mensuel") == 0);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cb_trimestriel), strcmp(s.type_abonnement, "Trimestriel") == 0);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cb_annuel), strcmp(s.type_abonnement, "Annuel") == 0);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cb_libre), strcmp(s.type_abonnement, "Accès libre") == 0);
+
+    gtk_widget_show(window_modif);
+}
+
+
+
+
+void
+on_button45_clicked                    (GtkButton       *button,
+                                        gpointer         user_data)
+{
+
+}
+void on_button46_clicked(GtkButton *button, gpointer user_data)
+{
+    GtkWidget *window_modif = gtk_widget_get_toplevel(GTK_WIDGET(button));
+    if (!window_modif) return;
+
+    int id_salle = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(window_modif), "id_salle"));
+    if (id_salle <= 0) return;
+
+    // ============ RÉCUPÉRATION DES DONNÉES ============
+    char nom[50], adresse[100], telephone[20], email[50];
+    char h_debut[10], h_fin[10];
+    char local_mode_paiement[30] = "Non défini";
+
+    strcpy(nom, gtk_entry_get_text(GTK_ENTRY(lookup_widget(window_modif, "entry56"))));
+    strcpy(adresse, gtk_entry_get_text(GTK_ENTRY(lookup_widget(window_modif, "entry57"))));
+    strcpy(telephone, gtk_entry_get_text(GTK_ENTRY(lookup_widget(window_modif, "entry58"))));
+    strcpy(email, gtk_entry_get_text(GTK_ENTRY(lookup_widget(window_modif, "entry59"))));
+    strcpy(h_debut, gtk_entry_get_text(GTK_ENTRY(lookup_widget(window_modif, "entry60"))));
+    strcpy(h_fin, gtk_entry_get_text(GTK_ENTRY(lookup_widget(window_modif, "entry61"))));
+
+    // Mode de paiement
+    GtkWidget *optionmenu2 = lookup_widget(window_modif, "optionmenu2");
+    if (optionmenu2)
+    {
+        int index = gtk_option_menu_get_history(GTK_OPTION_MENU(optionmenu2));
+        switch (index)
+        {
+            case 0: strcpy(local_mode_paiement, "Espece"); break;
+            case 1: strcpy(local_mode_paiement, "Cheque"); break;
+            case 2: strcpy(local_mode_paiement, "Carte Bancaire"); break;
+            case 3: strcpy(local_mode_paiement, "Virement"); break;
+        }
+    }
+
+    // Espace restauration
+    int espace_restauration = gtk_toggle_button_get_active(
+        GTK_TOGGLE_BUTTON(lookup_widget(window_modif, "radiobutton11"))
+    );
+
+    // Type abonnement
+    char type_abonnement[20] = "Non défini";
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_modif, "checkbutton5")))) 
+        strcpy(type_abonnement, "Mensuel");
+    else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_modif, "checkbutton6")))) 
+        strcpy(type_abonnement, "Trimestriel");
+    else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_modif, "checkbutton7")))) 
+        strcpy(type_abonnement, "Annuel");
+    else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_modif, "checkbutton8")))) 
+        strcpy(type_abonnement, "Accès libre");
+
+    // Capacité et tarif
+    int capacite = gtk_spin_button_get_value_as_int(
+        GTK_SPIN_BUTTON(lookup_widget(window_modif, "spinbutton21"))
+    );
+    float tarif = gtk_spin_button_get_value_as_float(
+        GTK_SPIN_BUTTON(lookup_widget(window_modif, "spinbutton22"))
+    );
+
+    // ============ TROUVER LA FENÊTRE GESTION ============
+    GtkWidget *window_gestion = NULL;
+    GtkWidget *treeview = NULL;
+    
+    printf("🔍 Recherche de la fenêtre GestionSalle...\n");
+    
+    GList *toplevels = gtk_window_list_toplevels();
+    for (GList *l = toplevels; l; l = l->next)
+    {
+        GtkWidget *w = GTK_WIDGET(l->data);
+        if (GTK_IS_WINDOW(w) && w != window_modif)
+        {
+            const char *name = gtk_widget_get_name(w);
+            const char *title = gtk_window_get_title(GTK_WINDOW(w));
+            
+            printf("  Fenêtre trouvée: name='%s', title='%s'\n", 
+                   name ? name : "NULL", 
+                   title ? title : "NULL");
+            
+            // Essayer plusieurs méthodes de détection
+            if ((name && strcmp(name, "GestionSalle") == 0) ||
+                (title && strstr(title, "Gestion des salles") != NULL))
+            {
+                window_gestion = w;
+                treeview = lookup_widget(window_gestion, "treeview3");
+                printf("  ✓ GestionSalle trouvée ! TreeView: %p\n", treeview);
+                break;
+            }
+        }
+    }
+    g_list_free(toplevels);
+    
+    if (!window_gestion)
+    {
+        printf("  ❌ GestionSalle NON trouvée !\n");
+    }
+
+    // ============ CRÉER LA STRUCTURE ============
+    SalleSport s;
+    s.id_salle = id_salle;
+    strcpy(s.nom, nom);
+    strcpy(s.adresse, adresse);
+    strcpy(s.telephone, telephone);
+    strcpy(s.email, email);
+    strcpy(s.heure_debut, h_debut);
+    strcpy(s.heure_fin, h_fin);
+    strcpy(s.mode_paiement, local_mode_paiement);
+    s.capacite = capacite;
+    s.tarif = tarif;
+    s.espace_restauration = espace_restauration;
+    strcpy(s.type_abonnement, type_abonnement);
+
+    // ============ MODIFIER DANS LE FICHIER ============
+    printf("📝 Modification de la salle ID %d...\n", id_salle);
+    int resultat = modifier_salle("salle.txt", id_salle, s);
+    printf("Résultat modification: %d\n", resultat);
+
+    // ============ FERMER LA FENÊTRE DE MODIFICATION ============
+    printf("🗑️ Fermeture de la fenêtre de modification...\n");
+    gtk_widget_destroy(window_modif);
+
+    // ============ RAFRAÎCHIR LE TREEVIEW ============
+    if (resultat)
+    {
+        printf("✓ Modification réussie dans le fichier\n");
+        
+        if (treeview)
+        {
+            printf("🔄 Rafraîchissement du TreeView...\n");
+            afficher_salles_interface(treeview, "salle.txt");
+            printf("✓ TreeView rafraîchi\n");
+        }
+        else
+        {
+            printf("❌ TreeView introuvable !\n");
+        }
+    }
+    else
+    {
+        printf("❌ Erreur lors de la modification du fichier\n");
+        g_warning("Erreur lors de la modification");
+    }
+}
+
+void on_esp__ce2_activate(GtkMenuItem *menuitem, gpointer user_data)
+{
+    strcpy(mode_paiement, "Espece");
+}
+
+void on_ch__que2_activate(GtkMenuItem *menuitem, gpointer user_data)
+{
+    strcpy(mode_paiement, "Cheque");
+}
+
+void on_cartebancaire2_activate(GtkMenuItem *menuitem, gpointer user_data)
+{
+    strcpy(mode_paiement, "Carte Bancaire");
+}
+
+void on_virement2_activate(GtkMenuItem *menuitem, gpointer user_data)
+{
+    strcpy(mode_paiement, "Virement");
+}
+
+
+
+
 
