@@ -4,16 +4,120 @@
 #include "callbacks.h"
 #include "interface.h"
 #include "support.h"
-
+#include <ctype.h>
+#include <regex.h>
 
 
 
  char mode_paiement[30];
+ // ============ FONCTIONS DE VALIDATION ============
+
+// Vérifier si une chaîne est vide ou contient uniquement des espaces
+int est_vide(const char *str) {
+    if (!str || strlen(str) == 0) return 1;
+    for (int i = 0; str[i]; i++) {
+        if (!isspace(str[i])) return 0;
+    }
+    return 1;
+}
+
+// Valider le format du téléphone (8 chiffres tunisien)
+int valider_telephone(const char *tel) {
+    if (strlen(tel) != 8) return 0;
+    for (int i = 0; tel[i]; i++) {
+        if (!isdigit(tel[i])) return 0;
+    }
+    return 1;
+}
+
+// Valider le format de l'email
+int valider_email(const char *email) {
+    regex_t regex;
+    int resultat;
+    
+    // Pattern simple pour email: texte@texte.texte
+    const char *pattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+    
+    resultat = regcomp(&regex, pattern, REG_EXTENDED | REG_NOSUB);
+    if (resultat != 0) return 0;
+    
+    resultat = regexec(&regex, email, 0, NULL, 0);
+    regfree(&regex);
+    
+    return (resultat == 0);
+}
+
+// Valider le format de l'heure (HH:MM)
+int valider_heure(const char *heure) {
+    if (strlen(heure) != 5) return 0;
+    if (heure[2] != ':') return 0;
+    
+    // Vérifier HH
+    if (!isdigit(heure[0]) || !isdigit(heure[1])) return 0;
+    int h = (heure[0] - '0') * 10 + (heure[1] - '0');
+    if (h < 0 || h > 23) return 0;
+    
+    // Vérifier MM
+    if (!isdigit(heure[3]) || !isdigit(heure[4])) return 0;
+    int m = (heure[3] - '0') * 10 + (heure[4] - '0');
+    if (m < 0 || m > 59) return 0;
+    
+    return 1;
+}
+
+// Comparer deux heures (retourne 1 si h1 < h2)
+int heure_avant(const char *h1, const char *h2) {
+    int h1_h = (h1[0] - '0') * 10 + (h1[1] - '0');
+    int h1_m = (h1[3] - '0') * 10 + (h1[4] - '0');
+    int h2_h = (h2[0] - '0') * 10 + (h2[1] - '0');
+    int h2_m = (h2[3] - '0') * 10 + (h2[4] - '0');
+    
+    if (h1_h < h2_h) return 1;
+    if (h1_h == h2_h && h1_m < h2_m) return 1;
+    return 0;
+}
+
+// Vérifier si le nom existe déjà
+int nom_existe(const char *nom) {
+    FILE *f = fopen("salle.txt", "r");
+    if (!f) return 0;
+    
+    char ligne[512];
+    while (fgets(ligne, sizeof(ligne), f)) {
+        SalleSport s;
+        int nb = sscanf(ligne, 
+            "%d;%49[^;];%99[^;];%19[^;];%49[^;];%29[^;];%9[^;];%9[^;];%f;%d;%d;%19[^\n]",
+            &s.id_salle, s.nom, s.adresse, s.telephone, s.email,
+            s.mode_paiement, s.heure_debut, s.heure_fin,
+            &s.tarif, &s.capacite, &s.espace_restauration, s.type_abonnement);
+        
+        if (nb == 12 && strcasecmp(s.nom, nom) == 0) {
+            fclose(f);
+            return 1;
+        }
+    }
+    fclose(f);
+    return 0;
+}
+
+// Afficher un message d'erreur
+void afficher_erreur(GtkWidget *parent, const char *message) {
+    GtkWidget *dialog = gtk_message_dialog_new(
+        GTK_WINDOW(parent),
+        GTK_DIALOG_MODAL,
+        GTK_MESSAGE_ERROR,
+        GTK_BUTTONS_OK,
+        "%s", message
+    );
+    gtk_window_set_title(GTK_WINDOW(dialog), " Erreur de validation");
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+}
 void on_button35_clicked(GtkButton *button, gpointer user_data)
 {
     GtkWidget *window_ajout = lookup_widget(button, "AjoutSalle");
 
-    // Récupération des champs texte
+    // ========== RÉCUPÉRATION DES CHAMPS ==========
     char nom[50], adresse[100], telephone[20], email[50];
     char h_debut[10], h_fin[10];
 
@@ -24,19 +128,167 @@ void on_button35_clicked(GtkButton *button, gpointer user_data)
     strcpy(h_debut, gtk_entry_get_text(GTK_ENTRY(lookup_widget(window_ajout, "entry41"))));
     strcpy(h_fin, gtk_entry_get_text(GTK_ENTRY(lookup_widget(window_ajout, "entry43"))));
 
-    if (strlen(mode_paiement) == 0)
-        strcpy(mode_paiement, "Non défini");
-
-    int espace_restauration = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "radiobutton1")));
-
-    char type_abonnement[20] = "Non défini";
-    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton1")))) strcpy(type_abonnement, "Mensuel");
-    else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton2")))) strcpy(type_abonnement, "Trimestriel");
-    else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton3")))) strcpy(type_abonnement, "Annuel");
-    else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton4")))) strcpy(type_abonnement, "Accès libre");
-
     int capacite = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(lookup_widget(window_ajout, "spinbutton1")));
     float tarif = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(lookup_widget(window_ajout, "spinbutton2")));
+
+    // ========== VALIDATION DES CHAMPS OBLIGATOIRES ==========
+    
+    // 1. Nom
+    if (est_vide(nom)) {
+        afficher_erreur(window_ajout, " Le nom de la salle est obligatoire !");
+        gtk_widget_grab_focus(lookup_widget(window_ajout, "entry37"));
+        return;
+    }
+    if (strlen(nom) < 3) {
+        afficher_erreur(window_ajout, " Le nom doit contenir au moins 3 caractères !");
+        gtk_widget_grab_focus(lookup_widget(window_ajout, "entry37"));
+        return;
+    }
+    if (nom_existe(nom)) {
+        afficher_erreur(window_ajout, " Une salle avec ce nom existe déjà !");
+        gtk_widget_grab_focus(lookup_widget(window_ajout, "entry37"));
+        return;
+    }
+
+    // 2. Adresse
+    if (est_vide(adresse)) {
+        afficher_erreur(window_ajout, " L'adresse est obligatoire !");
+        gtk_widget_grab_focus(lookup_widget(window_ajout, "entry38"));
+        return;
+    }
+    if (strlen(adresse) < 4) {
+        afficher_erreur(window_ajout, " L'adresse doit contenir au moins 4 caractères !");
+        gtk_widget_grab_focus(lookup_widget(window_ajout, "entry38"));
+        return;
+    }
+
+    // 3. Téléphone
+    if (est_vide(telephone)) {
+        afficher_erreur(window_ajout, " Le numéro de téléphone est obligatoire !");
+        gtk_widget_grab_focus(lookup_widget(window_ajout, "entry39"));
+        return;
+    }
+    if (!valider_telephone(telephone)) {
+        afficher_erreur(window_ajout, " Le téléphone doit contenir exactement 8 chiffres !\nExemple: 20123456");
+        gtk_widget_grab_focus(lookup_widget(window_ajout, "entry39"));
+        return;
+    }
+
+    // 4. Email
+    if (est_vide(email)) {
+        afficher_erreur(window_ajout, " L'email est obligatoire !");
+        gtk_widget_grab_focus(lookup_widget(window_ajout, "entry40"));
+        return;
+    }
+    if (!valider_email(email)) {
+        afficher_erreur(window_ajout, " Format d'email invalide !\nExemple: contact@salle.com");
+        gtk_widget_grab_focus(lookup_widget(window_ajout, "entry40"));
+        return;
+    }
+
+    // 5. Heure de début
+    if (est_vide(h_debut)) {
+        afficher_erreur(window_ajout, " L'heure de début est obligatoire !");
+        gtk_widget_grab_focus(lookup_widget(window_ajout, "entry41"));
+        return;
+    }
+    if (!valider_heure(h_debut)) {
+        afficher_erreur(window_ajout, " Format d'heure de début invalide !\nFormat attendu: HH:MM (exemple: 08:00)");
+        gtk_widget_grab_focus(lookup_widget(window_ajout, "entry41"));
+        return;
+    }
+
+    // 6. Heure de fin
+    if (est_vide(h_fin)) {
+        afficher_erreur(window_ajout, " L'heure de fin est obligatoire !");
+        gtk_widget_grab_focus(lookup_widget(window_ajout, "entry43"));
+        return;
+    }
+    if (!valider_heure(h_fin)) {
+        afficher_erreur(window_ajout, " Format d'heure de fin invalide !\nFormat attendu: HH:MM (exemple: 22:00)");
+        gtk_widget_grab_focus(lookup_widget(window_ajout, "entry43"));
+        return;
+    }
+    if (!heure_avant(h_debut, h_fin)) {
+        afficher_erreur(window_ajout, " L'heure de fin doit être après l'heure de début !");
+        gtk_widget_grab_focus(lookup_widget(window_ajout, "entry43"));
+        return;
+    }
+
+    // 7. Mode de paiement
+    if (strlen(mode_paiement) == 0) {
+        afficher_erreur(window_ajout, " Veuillez sélectionner un mode de paiement !");
+        return;
+    }
+    // 8. Tarif
+    if (tarif <= 0.0) {
+        afficher_erreur(window_ajout, " Le tarif doit être supérieur à 0 !");
+        gtk_widget_grab_focus(lookup_widget(window_ajout, "spinbutton2"));
+        return;
+    }
+ if (tarif < 10.0) {
+        GtkWidget *dialog = gtk_message_dialog_new(
+            GTK_WINDOW(window_ajout),
+            GTK_DIALOG_MODAL,
+            GTK_MESSAGE_QUESTION,
+            GTK_BUTTONS_YES_NO,
+            "⚠️ Le tarif semble faible (%.2f DT).\nVoulez-vous continuer ?",
+            tarif
+        );
+        gtk_window_set_title(GTK_WINDOW(dialog), "Confirmation");
+        int response = gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+        if (response != GTK_RESPONSE_YES) {
+            gtk_widget_grab_focus(lookup_widget(window_ajout, "spinbutton2"));
+            return;
+        }
+    }
+    // 9. Capacité
+    if (capacite <= 0) {
+        afficher_erreur(window_ajout, " La capacité doit être supérieure à 0 !");
+        gtk_widget_grab_focus(lookup_widget(window_ajout, "spinbutton1"));
+        return;
+    }
+    if (capacite < 10) {
+        GtkWidget *dialog = gtk_message_dialog_new(
+            GTK_WINDOW(window_ajout),
+            GTK_DIALOG_MODAL,
+            GTK_MESSAGE_QUESTION,
+            GTK_BUTTONS_YES_NO,
+            "⚠️ La capacité semble faible (%d personnes).\nVoulez-vous continuer ?",
+            capacite
+        );
+        gtk_window_set_title(GTK_WINDOW(dialog), "Confirmation");
+        int response = gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+        if (response != GTK_RESPONSE_YES) {
+            gtk_widget_grab_focus(lookup_widget(window_ajout, "spinbutton1"));
+            return;
+        }
+    }
+
+
+    // 10. Type d'abonnement
+    char type_abonnement[20] = "Non défini";
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton1")))) 
+        strcpy(type_abonnement, "Mensuel");
+    else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton2")))) 
+        strcpy(type_abonnement, "Trimestriel");
+    else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton3")))) 
+        strcpy(type_abonnement, "Annuel");
+    else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton4")))) 
+        strcpy(type_abonnement, "Accès libre");
+    
+    if (strcmp(type_abonnement, "Non défini") == 0) {
+        afficher_erreur(window_ajout, " Veuillez sélectionner au moins un type d'abonnement !");
+        return;
+    }
+
+    // ========== VALIDATION RÉUSSIE - CRÉATION DE LA SALLE ==========
+    
+    int espace_restauration = gtk_toggle_button_get_active(
+        GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "radiobutton1"))
+    );
 
     SalleSport s;
     s.id_salle = generer_nouvel_id("salle.txt");
@@ -54,45 +306,87 @@ void on_button35_clicked(GtkButton *button, gpointer user_data)
 
     if (ajouter_salle("salle.txt", s))
     {
-        // ✅ Fermer le formulaire
-        gtk_widget_destroy(window_ajout);
+        // Message de succès
+        GtkWidget *dialog = gtk_message_dialog_new(
+            GTK_WINDOW(window_ajout),
+            GTK_DIALOG_MODAL,
+            GTK_MESSAGE_INFO,
+            GTK_BUTTONS_OK,
+            "Salle '%s' ajoutée avec succès !\nID: %d",
+            s.nom, s.id_salle
+        );
+        gtk_window_set_title(GTK_WINDOW(dialog), "Succès");
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
 
-        // ✅ Trouver la fenêtre GestionSalle existante
+        // ============ CHERCHER LA FENÊTRE GESTION EXISTANTE ============
         GtkWidget *window_gestion = NULL;
         GList *toplevels = gtk_window_list_toplevels();
+        
+        printf("🔍 Recherche de la fenêtre GestionSalle...\n");
+        
         for (GList *l = toplevels; l; l = l->next)
         {
             GtkWidget *w = GTK_WIDGET(l->data);
-            if (GTK_IS_WINDOW(w) && 
-                g_str_equal(gtk_widget_get_name(w), "GestionSalle"))
+            if (GTK_IS_WINDOW(w) && w != window_ajout)
             {
-                window_gestion = w;
-                break;
+                const char *name = gtk_widget_get_name(w);
+                printf("  Fenêtre trouvée: %s\n", name ? name : "NULL");
+                
+                if (name && strcmp(name, "GestionSalle") == 0)
+                {
+                    window_gestion = w;
+                    printf("  ✓ GestionSalle trouvée !\n");
+                    break;
+                }
             }
         }
         g_list_free(toplevels);
 
-        // Si on la trouve, rafraîchir son TreeView
+        // ============ FERMER LA FENÊTRE D'AJOUT ============
+        gtk_widget_destroy(window_ajout);
+
+        // ============ GÉRER LA FENÊTRE GESTION ============
         if (window_gestion)
         {
+            // Si elle existe, rafraîchir le TreeView
+            printf("📝 Rafraîchissement de la fenêtre existante...\n");
             GtkWidget *treeview = lookup_widget(window_gestion, "treeview3");
             if (treeview)
             {
                 afficher_salles_interface(treeview, "salle.txt");
+                printf("✓ TreeView rafraîchi\n");
             }
+            
+            // S'assurer qu'elle est visible et au premier plan
+            gtk_widget_show(window_gestion);
+            gtk_window_present(GTK_WINDOW(window_gestion));
         }
         else
         {
-            // En dernier recours, recréer (mais cela ne devrait pas arriver)
+            // Si elle n'existe pas, la créer
+            printf("🆕 Création d'une nouvelle fenêtre GestionSalle...\n");
             window_gestion = create_GestionSalle();
-            GtkWidget *treeview = lookup_widget(window_gestion, "treeview3");
-            afficher_salles_interface(treeview, "salle.txt");
-            gtk_widget_show(window_gestion);
+            
+            if (window_gestion)
+            {
+                GtkWidget *treeview = lookup_widget(window_gestion, "treeview3");
+                if (treeview)
+                {
+                    afficher_salles_interface(treeview, "salle.txt");
+                }
+                gtk_widget_show(window_gestion);
+                printf("✓ Fenêtre GestionSalle créée et affichée\n");
+            }
+            else
+            {
+                printf("❌ Erreur : impossible de créer la fenêtre GestionSalle\n");
+            }
         }
     }
     else
     {
-        g_warning("Erreur d'ajout de salle !");
+        afficher_erreur(window_ajout, " Erreur lors de l'ajout de la salle !");
     }
 }
 

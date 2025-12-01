@@ -1,0 +1,4 @@
+1;ali;ghjyt;78456123;jihen.sliti@yahoo.fr;Carte Bancaire;08:00;10:00;1,00;78;1;Mensuel
+2;zjk;klmjk;20123456;krjjrr.hh@gg.tn;Carte Bancaire;08:00;14:00;1,00;78;1;Mensuel
+3;zfff;hhhhh;78456123;ontact@salle.com;Carte Bancaire;08:00;10:00;1,00;40;1;Mensuel
+4;zdeed;dddd;78456123;contact@salle.com;Carte Bancaire;08:00;10:00;100,00;100;1;Mensuel
