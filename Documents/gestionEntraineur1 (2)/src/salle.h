@@ -15,7 +15,7 @@ int id_salle;
     float tarif;
     int capacite;
     int espace_restauration; // 1 = oui, 0 = non
-     char type_abonnement[20];
+     char type_abonnement[100];
     
 } SalleSport;
 

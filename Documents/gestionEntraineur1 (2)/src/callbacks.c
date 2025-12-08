@@ -269,20 +269,34 @@ void on_button35_clicked(GtkButton *button, gpointer user_data)
 
 
     // 10. Type d'abonnement
-    char type_abonnement[20] = "Non défini";
-    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton1")))) 
-        strcpy(type_abonnement, "Mensuel");
-    else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton2")))) 
-        strcpy(type_abonnement, "Trimestriel");
-    else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton3")))) 
-        strcpy(type_abonnement, "Annuel");
-    else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton4")))) 
-        strcpy(type_abonnement, "Accès libre");
-    
-    if (strcmp(type_abonnement, "Non défini") == 0) {
-        afficher_erreur(window_ajout, " Veuillez sélectionner au moins un type d'abonnement !");
-        return;
-    }
+char type_abonnement[100] = ""; // Commence vide
+int au_moins_un = 0;
+
+if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton1")))) {
+    if (au_moins_un) strcat(type_abonnement, ", ");
+    strcat(type_abonnement, "Mensuel");
+    au_moins_un = 1;
+}
+if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton2")))) {
+    if (au_moins_un) strcat(type_abonnement, ", ");
+    strcat(type_abonnement, "Trimestriel");
+    au_moins_un = 1;
+}
+if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton3")))) {
+    if (au_moins_un) strcat(type_abonnement, ", ");
+    strcat(type_abonnement, "Annuel");
+    au_moins_un = 1;
+}
+if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_ajout, "checkbutton4")))) {
+    if (au_moins_un) strcat(type_abonnement, ", ");
+    strcat(type_abonnement, "Accès libre");
+    au_moins_un = 1;
+}
+
+if (!au_moins_un) {
+    afficher_erreur(window_ajout, " Veuillez sélectionner au moins un type d'abonnement !");
+    return;
+}
 
     // ========== VALIDATION RÉUSSIE - CRÉATION DE LA SALLE ==========
     
@@ -817,15 +831,30 @@ void on_button46_clicked(GtkButton *button, gpointer user_data)
     );
 
     // Type abonnement
-    char type_abonnement[20] = "Non défini";
-    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_modif, "checkbutton5")))) 
-        strcpy(type_abonnement, "Mensuel");
-    else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_modif, "checkbutton6")))) 
-        strcpy(type_abonnement, "Trimestriel");
-    else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_modif, "checkbutton7")))) 
-        strcpy(type_abonnement, "Annuel");
-    else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_modif, "checkbutton8")))) 
-        strcpy(type_abonnement, "Accès libre");
+  // Type abonnement - PERMETTRE PLUSIEURS CHOIX
+char type_abonnement[100] = "";
+int nb_types = 0;
+
+if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_modif, "checkbutton5")))) {
+    if (nb_types > 0) strcat(type_abonnement, ", ");
+    strcat(type_abonnement, "Mensuel");
+    nb_types++;
+}
+if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_modif, "checkbutton6")))) {
+    if (nb_types > 0) strcat(type_abonnement, ", ");
+    strcat(type_abonnement, "Trimestriel");
+    nb_types++;
+}
+if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_modif, "checkbutton7")))) {
+    if (nb_types > 0) strcat(type_abonnement, ", ");
+    strcat(type_abonnement, "Annuel");
+    nb_types++;
+}
+if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(window_modif, "checkbutton8")))) {
+    if (nb_types > 0) strcat(type_abonnement, ", ");
+    strcat(type_abonnement, "Accès libre");
+    nb_types++;
+}
 
     // Capacité et tarif
     int capacite = gtk_spin_button_get_value_as_int(
