@@ -1,9 +1,19 @@
 #ifndef SALLE_H
 #define SALLE_H
-
 #include <gtk/gtk.h>
 
+// === Ajouter cette structure ici ===
 typedef struct {
+    int id_salle;
+    char cin_entraineur[20];
+    char nom_entraineur[50];
+    char prenom_entraineur[50];
+    char nom_salle[50];
+} Inscription_Salle;
+
+#define FICHIER_INSCRIPTIONS_SALLE "inscriptions_salle.txt"
+typedef struct {
+int id_salle;
     char nom[50];
     char adresse[100];
     char telephone[20];
@@ -11,10 +21,30 @@ typedef struct {
     char mode_paiement[30];
     char heure_debut[10];
     char heure_fin[10];
-    int tarif;
+    float tarif;
     int capacite;
     int espace_restauration; // 1 = oui, 0 = non
+     char type_abonnement[100];
+    
 } SalleSport;
+#define FICHIER_INSCRIPTIONS_SALLE "inscriptions_salle.txt"
 
+int ajouter_salle(char *filename, SalleSport s);
+void afficher_salles_interface(GtkWidget *ctree, const char *filename);
+int supprimer_salle(const char *filename, int id);
+
+SalleSport chercher_salle(char *filename, char *nom);
+int modifier_salle(char *filename, const int id, SalleSport nouv);
+SalleSport chercher_salle_par_id(const char *filename, int id_recherche);
+
+int inscrire_salle(Inscription_Salle is, GtkWidget *parent);
+Inscription_Salle* afficher_inscriptions_salle(int *nb);
+int verifier_inscription_existe(int id_salle, char *cin);
+void afficher_inscriptions_treeview(GtkWidget *treeview);
+
+// Utilitaire (optionnel, mais utile)
+void remplir_option_menu(GtkOptionMenu *menu, char *items[], int count);
+void afficher_statistiques_inscriptions(GtkWidget *parent);
+//void statistiques_salles(char *filename);*/
 #endif // SALLE_H
 

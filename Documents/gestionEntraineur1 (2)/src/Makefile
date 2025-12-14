@@ -161,12 +161,12 @@ am__define_uniq_tagged_files = \
   done | $(am__uniquify_input)`
 am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/depcomp
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} '/home/eya/Documents/gestionEntraineur1/missing' aclocal-1.16
+ACLOCAL = ${SHELL} '/home/babay/Projets/projet_c/Documents/gestionEntraineur1 (2)/missing' aclocal-1.16
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} '/home/eya/Documents/gestionEntraineur1/missing' autoconf
-AUTOHEADER = ${SHELL} '/home/eya/Documents/gestionEntraineur1/missing' autoheader
-AUTOMAKE = ${SHELL} '/home/eya/Documents/gestionEntraineur1/missing' automake-1.16
+AUTOCONF = ${SHELL} '/home/babay/Projets/projet_c/Documents/gestionEntraineur1 (2)/missing' autoconf
+AUTOHEADER = ${SHELL} '/home/babay/Projets/projet_c/Documents/gestionEntraineur1 (2)/missing' autoheader
+AUTOMAKE = ${SHELL} '/home/babay/Projets/projet_c/Documents/gestionEntraineur1 (2)/missing' automake-1.16
 AWK = mawk
 CATALOGS = 
 CATOBJEXT = .gmo
@@ -202,8 +202,8 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = 
 LTLIBOBJS = 
-MAINT = 
-MAKEINFO = ${SHELL} '/home/eya/Documents/gestionEntraineur1/missing' makeinfo
+MAINT = #
+MAKEINFO = ${SHELL} '/home/babay/Projets/projet_c/Documents/gestionEntraineur1 (2)/missing' makeinfo
 MKDIR_P = /usr/bin/mkdir -p
 MKINSTALLDIRS = .//mkinstalldirs
 MSGFMT = /usr/bin/msgfmt
@@ -232,10 +232,10 @@ STRIP =
 USE_NLS = yes
 VERSION = 0.1
 XGETTEXT = /usr/bin/xgettext
-abs_builddir = /home/eya/Documents/gestionEntraineur1/src
-abs_srcdir = /home/eya/Documents/gestionEntraineur1/src
-abs_top_builddir = /home/eya/Documents/gestionEntraineur1
-abs_top_srcdir = /home/eya/Documents/gestionEntraineur1
+abs_builddir = /home/babay/Projets/projet_c/Documents/gestionEntraineur1 (2)/src
+abs_srcdir = /home/babay/Projets/projet_c/Documents/gestionEntraineur1 (2)/src
+abs_top_builddir = /home/babay/Projets/projet_c/Documents/gestionEntraineur1 (2)
+abs_top_srcdir = /home/babay/Projets/projet_c/Documents/gestionEntraineur1 (2)
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -254,7 +254,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/eya/Documents/gestionEntraineur1/install-sh
+install_sh = ${SHELL} '/home/babay/Projets/projet_c/Documents/gestionEntraineur1 (2)/install-sh'
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -291,7 +291,7 @@ all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .o .obj
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in: # $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -315,9 +315,9 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 
-$(top_srcdir)/configure:  $(am__configure_deps)
+$(top_srcdir)/configure: # $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
+$(ACLOCAL_M4): # $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
 install-binPROGRAMS: $(bin_PROGRAMS)
