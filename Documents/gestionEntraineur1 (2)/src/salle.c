@@ -299,7 +299,6 @@ SalleSport chercher_salle(char *filename, char *nom)
 }
 
 // -------------------- MODIFIER --------------------
-// -------------------- MODIFIER --------------------
 int modifier_salle(char *filename, const int id, SalleSport nouv)
 {
     SalleSport s;
@@ -403,4 +402,278 @@ SalleSport chercher_salle_par_id(const char *filename, int id_recherche)
     s.id_salle = -1;
     return s;
 }
+// Vérifier si une inscription existe déjà
+int verifier_inscription_existe(int id_salle, char *cin) {
+    FILE *f = fopen(FICHIER_INSCRIPTIONS_SALLE, "r");
+    if (f == NULL) {
+        return 0; // Fichier n'existe pas, donc pas d'inscription
+    }
+    
+    Inscription_Salle is_temp;
+    while (fscanf(f, "%d|%[^|]|%[^|]|%[^|]|%[^\n]\n",
+                  &is_temp.id_salle, is_temp.cin_entraineur,
+                  is_temp.nom_entraineur, is_temp.prenom_entraineur,
+                  is_temp.nom_salle) != EOF) {
+        
+        if (is_temp.id_salle == id_salle && strcmp(is_temp.cin_entraineur, cin) == 0) {
+            fclose(f);
+            return 1; // L'inscription existe déjà
+        }
+    }
+    
+    fclose(f);
+    return 0;
+}
 
+// Inscrire un entraîneur à une salle
+// Inscrire un entraîneur à une salle (avec dialogue d'erreur)
+int inscrire_salle(Inscription_Salle is, GtkWidget *parent) {
+    // Vérifier si l'inscription existe déjà
+    if (verifier_inscription_existe(is.id_salle, is.cin_entraineur)) {
+        // Afficher une boîte de dialogue au lieu de printf
+        GtkWidget *dialog = gtk_message_dialog_new(
+            GTK_WINDOW(parent),
+            GTK_DIALOG_MODAL,
+            GTK_MESSAGE_WARNING,
+            GTK_BUTTONS_OK,
+            "L'entraîneur %s %s est déjà inscrit à la salle « %s » (ID : %d).",
+            is.nom_entraineur,
+            is.prenom_entraineur,
+            is.nom_salle,
+            is.id_salle
+        );
+        gtk_window_set_title(GTK_WINDOW(dialog), "Inscription existante");
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+        return 0; // Inscription déjà existante
+    }
+
+    FILE *f = fopen(FICHIER_INSCRIPTIONS_SALLE, "a");
+    if (f == NULL) {
+        GtkWidget *dialog = gtk_message_dialog_new(
+            GTK_WINDOW(parent),
+            GTK_DIALOG_MODAL,
+            GTK_MESSAGE_ERROR,
+            GTK_BUTTONS_OK,
+            "Erreur : impossible d'ouvrir le fichier %s pour l'écriture.",
+            FICHIER_INSCRIPTIONS_SALLE
+        );
+        gtk_window_set_title(GTK_WINDOW(dialog), "Erreur fichier");
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+        return 0;
+    }
+
+    fprintf(f, "%d|%s|%s|%s|%s\n",
+            is.id_salle, is.cin_entraineur,
+            is.nom_entraineur, is.prenom_entraineur,
+            is.nom_salle);
+    fclose(f);
+
+    // Optionnel : afficher un message de succès (tu le fais déjà dans le callback)
+    return 1;
+}
+// Afficher toutes les inscriptions aux salles
+Inscription_Salle* afficher_inscriptions_salle(int *nb) {
+    FILE *f = fopen(FICHIER_INSCRIPTIONS_SALLE, "r");
+    if (f == NULL) {
+        printf("ℹ️  Aucune inscription trouvée (fichier inexistant)\n");
+        *nb = 0;
+        return NULL;
+    }
+    
+    // Compter le nombre d'inscriptions
+    *nb = 0;
+    Inscription_Salle is_temp;
+    while (fscanf(f, "%d|%[^|]|%[^|]|%[^|]|%[^\n]\n",
+                  &is_temp.id_salle, is_temp.cin_entraineur,
+                  is_temp.nom_entraineur, is_temp.prenom_entraineur,
+                  is_temp.nom_salle) != EOF) {
+        (*nb)++;
+    }
+    
+    if (*nb == 0) {
+        fclose(f);
+        printf("ℹ️  Aucune inscription trouvée (fichier vide)\n");
+        return NULL;
+    }
+    
+    // Allouer la mémoire
+    Inscription_Salle *inscriptions = (Inscription_Salle*)malloc((*nb) * sizeof(Inscription_Salle));
+    if (inscriptions == NULL) {
+        printf("❌ Erreur d'allocation mémoire\n");
+        fclose(f);
+        *nb = 0;
+        return NULL;
+    }
+    
+    // Relire le fichier
+    rewind(f);
+    int i = 0;
+    while (fscanf(f, "%d|%[^|]|%[^|]|%[^|]|%[^\n]\n",
+                  &inscriptions[i].id_salle, inscriptions[i].cin_entraineur,
+                  &inscriptions[i].nom_entraineur, inscriptions[i].prenom_entraineur,
+                  inscriptions[i].nom_salle) != EOF) {
+        i++;
+    }
+    
+    fclose(f);
+    printf("✓ %d inscription(s) chargée(s)\n", *nb);
+    return inscriptions;
+}
+void afficher_inscriptions_treeview(GtkWidget *treeview)
+{
+    int nb;
+    Inscription_Salle *inscr = afficher_inscriptions_salle(&nb);
+    if (!inscr) return;
+
+    GtkListStore *store = gtk_list_store_new(5,
+        G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+
+    for (int i = 0; i < nb; i++) {
+        GtkTreeIter iter;
+        gtk_list_store_append(store, &iter);
+        gtk_list_store_set(store, &iter,
+            0, inscr[i].id_salle,
+            1, inscr[i].cin_entraineur,
+            2, inscr[i].nom_entraineur,
+            3, inscr[i].prenom_entraineur,
+            4, inscr[i].nom_salle,
+            -1);
+    }
+
+    // Créer les colonnes si elles n’existent pas
+    if (gtk_tree_view_get_columns(GTK_TREE_VIEW(treeview)) == NULL) {
+        const char *titles[] = {"ID Salle", "CIN", "Nom", "Prénom", "Salle"};
+
+        for (int i = 0; i < 5; i++) {
+            GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
+            GtkTreeViewColumn *col = gtk_tree_view_column_new_with_attributes(
+                titles[i], renderer, "text", i, NULL);
+
+            // 👇 Ajoute cette ligne pour fixer la largeur minimale
+            gtk_tree_view_column_set_min_width(col, 100); // Ajuste selon tes besoins
+
+            gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), col);
+        }
+    }
+
+    gtk_tree_view_set_model(GTK_TREE_VIEW(treeview), GTK_TREE_MODEL(store));
+    g_free(inscr);
+    g_object_unref(store);
+}// salle.c
+void remplir_option_menu(GtkOptionMenu *menu, char *items[], int count) {
+    GtkWidget *m = gtk_menu_new();
+    for (int i = 0; i < count; i++) {
+        GtkWidget *item = gtk_menu_item_new_with_label(items[i]);
+        gtk_widget_show(item);
+        gtk_menu_shell_append(GTK_MENU_SHELL(m), item);
+    }
+    gtk_option_menu_set_menu(menu, m);
+}
+// salle.c
+
+void afficher_statistiques_inscriptions(GtkWidget *parent)
+{
+    // 1. Compter le nombre total de salles
+    int nb_salles = 0;
+    FILE *f_salle = fopen("salle.txt", "r");
+    if (f_salle) {
+        char ligne[512];
+        while (fgets(ligne, sizeof(ligne), f_salle)) {
+            SalleSport s;
+            if (sscanf(ligne,
+                "%d;%49[^;];%99[^;];%19[^;];%49[^;];%29[^;];%9[^;];%9[^;];%f;%d;%d;%19[^"
+                "\n]",
+                &s.id_salle, s.nom, s.adresse, s.telephone, s.email,
+                s.mode_paiement, s.heure_debut, s.heure_fin,
+                &s.tarif, &s.capacite, &s.espace_restauration, s.type_abonnement) == 12) {
+                nb_salles++;
+            }
+        }
+        fclose(f_salle);
+    }
+
+    // 2. Compter les inscriptions par salle + total
+    int total_inscriptions = 0;
+    int max_inscrits = 0;
+    int id_salle_plus = -1;
+    int compte[1000] = {0}; // suppose que les ID de salle sont < 1000
+
+    FILE *f_inscr = fopen("inscriptions_salle.txt", "r");
+    if (f_inscr) {
+        Inscription_Salle is;
+        while (fscanf(f_inscr, "%d|%19[^|]|%49[^|]|%49[^|]|%49[^\n]",
+                      &is.id_salle, is.cin_entraineur, is.nom_entraineur,
+                      is.prenom_entraineur, is.nom_salle) == 5) {
+            total_inscriptions++;
+            if (is.id_salle >= 0 && is.id_salle < 1000) {
+                compte[is.id_salle]++;
+                if (compte[is.id_salle] > max_inscrits) {
+                    max_inscrits = compte[is.id_salle];
+                    id_salle_plus = is.id_salle;
+                }
+            }
+        }
+        fclose(f_inscr);
+    }
+
+    // 3. Récupérer le nom de la salle la plus inscrite
+    char nom_salle_plus[100] = "Inconnue";
+    if (id_salle_plus != -1) {
+        f_salle = fopen("salle.txt", "r");
+        if (f_salle) {
+            char ligne[512];
+            while (fgets(ligne, sizeof(ligne), f_salle)) {
+                SalleSport s;
+                if (sscanf(ligne,
+                    "%d;%49[^;];%99[^;];%19[^;];%49[^;];%29[^;];%9[^;];%9[^;];%f;%d;%d;%19[^"
+                    "\n]",
+                    &s.id_salle, s.nom, s.adresse, s.telephone, s.email,
+                    s.mode_paiement, s.heure_debut, s.heure_fin,
+                    &s.tarif, &s.capacite, &s.espace_restauration, s.type_abonnement) == 12) {
+                    if (s.id_salle == id_salle_plus) {
+                        strcpy(nom_salle_plus, s.nom);
+                        break;
+                    }
+                }
+            }
+            fclose(f_salle);
+        }
+    }
+
+    // 4. Afficher les résultats dans une boîte de dialogue
+    char message[1024];
+    if (id_salle_plus == -1) {
+        snprintf(message, sizeof(message),
+            "📊 Statistiques des inscriptions :\n\n"
+            "• Nombre total de salles : %d\n"
+            "• Nombre total d'inscriptions : %d\n"
+            "• Aucune inscription trouvée.",
+            nb_salles, total_inscriptions
+        );
+    } else {
+        snprintf(message, sizeof(message),
+            "📊 Statistiques des inscriptions :\n\n"
+            "• Nombre total de salles : %d\n"
+            "• Nombre total d'inscriptions : %d\n"
+            "• Salle la plus inscrite :\n"
+            "   - Nom : %s\n"
+            "   - ID  : %d\n"
+            "   - Nombre d'inscrits : %d",
+            nb_salles, total_inscriptions,
+            nom_salle_plus, id_salle_plus, max_inscrits
+        );
+    }
+
+    GtkWidget *dialog = gtk_message_dialog_new(
+        GTK_WINDOW(parent),
+        GTK_DIALOG_MODAL,
+        GTK_MESSAGE_INFO,
+        GTK_BUTTONS_OK,
+        "%s", message
+    );
+    gtk_window_set_title(GTK_WINDOW(dialog), "Statistiques Inscriptions");
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+}

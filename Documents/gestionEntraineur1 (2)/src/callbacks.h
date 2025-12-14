@@ -86,3 +86,11 @@ on_esp__ce2_activate                   (GtkMenuItem     *menuitem,
 void
 on_ch__que2_activate                   (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
+
+void
+on_inscri_salle_clicked                (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_button49_clicked                    (GtkButton       *button,
+                                        gpointer         user_data);

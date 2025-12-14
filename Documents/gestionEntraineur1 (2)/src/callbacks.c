@@ -1,6 +1,7 @@
 #include <gtk/gtk.h>
 #include <string.h>
 #include "salle.h"
+
 #include "callbacks.h"
 #include "interface.h"
 #include "support.h"
@@ -10,6 +11,39 @@
 
 
  char mode_paiement[30];
+ // Au début de callbacks.c, après les includes
+static char **liste_noms_salles = NULL;
+static int *liste_ids_salles = NULL;
+static int nb_salles_stored = 0;
+
+static char **liste_noms_entraineurs = NULL;
+static char **liste_cins_entraineurs = NULL;
+static char **liste_prenoms_entraineurs = NULL;
+static int nb_entraineurs_stored = 0;
+
+void liberer_listes_inscription_salle(void) {
+    for (int i = 0; i < nb_salles_stored; i++) {
+        g_free(liste_noms_salles[i]);
+    }
+    g_free(liste_noms_salles);
+    g_free(liste_ids_salles);
+    liste_noms_salles = NULL;
+    liste_ids_salles = NULL;
+    nb_salles_stored = 0;
+
+    for (int i = 0; i < nb_entraineurs_stored; i++) {
+        g_free(liste_noms_entraineurs[i]);
+        g_free(liste_cins_entraineurs[i]);
+        g_free(liste_prenoms_entraineurs[i]);
+    }
+    g_free(liste_noms_entraineurs);
+    g_free(liste_cins_entraineurs);
+    g_free(liste_prenoms_entraineurs);
+    liste_noms_entraineurs = NULL;
+    liste_cins_entraineurs = NULL;
+    liste_prenoms_entraineurs = NULL;
+    nb_entraineurs_stored = 0;
+}
  // ============ FONCTIONS DE VALIDATION ============
 
 // Vérifier si une chaîne est vide ou contient uniquement des espaces
@@ -971,4 +1005,141 @@ void on_virement2_activate(GtkMenuItem *menuitem, gpointer user_data)
 
 
 
+
+
+void on_inscri_salle_clicked(GtkButton *button, gpointer user_data)
+{
+    GtkWidget *window = gtk_widget_get_toplevel(GTK_WIDGET(button));
+    GtkWidget *om_entr = lookup_widget(window, "optionmenu3");
+    GtkWidget *om_salle = lookup_widget(window, "optionmenu4");
+    int idx_entr = gtk_option_menu_get_history(GTK_OPTION_MENU(om_entr));
+    int idx_salle = gtk_option_menu_get_history(GTK_OPTION_MENU(om_salle));
+
+    if (idx_entr < 0 || idx_salle < 0) {
+        afficher_erreur(window, "Veuillez sélectionner un entraîneur et une salle !");
+        return;
+    }
+
+    // Relire les fichiers pour obtenir les données réelles
+    FILE *fs = fopen("salle.txt", "r");
+    SalleSport s_temp;
+    int i = 0;
+    while (fscanf(fs, "%d;%49[^;];%99[^;];%19[^;];%49[^;];%29[^;];%9[^;];%9[^;];%f;%d;%d;%19[^\n]",
+                  &s_temp.id_salle, s_temp.nom, s_temp.adresse, s_temp.telephone, s_temp.email,
+                  s_temp.mode_paiement, s_temp.heure_debut, s_temp.heure_fin,
+                  &s_temp.tarif, &s_temp.capacite, &s_temp.espace_restauration, s_temp.type_abonnement) == 12) {
+        if (i == idx_salle) break;
+        i++;
+    }
+    fclose(fs);
+
+    FILE *fe = fopen("entraineurs.txt", "r");
+    char cin[20], nom[50], prenom[50];
+    i = 0;
+    while (fscanf(fe, "%19[^;];%49[^;];%49[^\n]", cin, nom, prenom) == 3) {
+        if (i == idx_entr) break;
+        i++;
+    }
+    fclose(fe);
+
+    Inscription_Salle is;
+    is.id_salle = s_temp.id_salle;
+    strcpy(is.cin_entraineur, cin);
+    strcpy(is.nom_entraineur, nom);
+    strcpy(is.prenom_entraineur, prenom);
+    strcpy(is.nom_salle, s_temp.nom);
+
+   if (inscrire_salle(is, window)) {
+        afficher_inscriptions_treeview(lookup_widget(window, "treeview4"));
+        GtkWidget *dlg = gtk_message_dialog_new(GTK_WINDOW(window),
+            GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
+            "Inscription réussie !");
+        gtk_dialog_run(GTK_DIALOG(dlg));
+        gtk_widget_destroy(dlg);
+    }
+}
+// collback.c
+void remplir_listes_inscription_salle(GtkWidget *window) {
+    GtkWidget *om_entr = lookup_widget(window, "optionmenu3");
+    GtkWidget *om_salle = lookup_widget(window, "optionmenu4");
+
+    // Libérer les anciennes listes si elles existent
+    liberer_listes_inscription_salle();
+
+    // Charger les salles
+    FILE *fs = fopen("salle.txt", "r");
+    if (!fs) {
+        g_warning("Impossible d'ouvrir salle.txt");
+        return;
+    }
+
+    char ligne[512];
+    while (fgets(ligne, sizeof(ligne), fs) && nb_salles_stored < 1000) {
+        SalleSport s;
+        if (sscanf(ligne,
+            "%d;%49[^;];%99[^;];%19[^;];%49[^;];%29[^;];%9[^;];%9[^;];%f;%d;%d;%19[^\n]",
+            &s.id_salle, s.nom, s.adresse, s.telephone, s.email,
+            s.mode_paiement, s.heure_debut, s.heure_fin,
+            &s.tarif, &s.capacite, &s.espace_restauration, s.type_abonnement) == 12) {
+
+            liste_noms_salles = g_realloc(liste_noms_salles, (nb_salles_stored + 1) * sizeof(char*));
+            liste_ids_salles = g_realloc(liste_ids_salles, (nb_salles_stored + 1) * sizeof(int));
+
+            liste_noms_salles[nb_salles_stored] = g_strdup(s.nom);
+            liste_ids_salles[nb_salles_stored] = s.id_salle;
+            nb_salles_stored++;
+        }
+    }
+    fclose(fs);
+
+    // Charger les entraîneurs
+    FILE *fe = fopen("entraineurs.txt", "r");
+    if (!fe) {
+        g_warning("Impossible d'ouvrir entraineurs.txt");
+        return;
+    }
+
+    char cin[20], nom[50], prenom[50];
+    while (fscanf(fe, "%19[^;];%49[^;];%49[^\n]", cin, nom, prenom) == 3 && nb_entraineurs_stored < 1000) {
+        liste_noms_entraineurs = g_realloc(liste_noms_entraineurs, (nb_entraineurs_stored + 1) * sizeof(char*));
+        liste_cins_entraineurs = g_realloc(liste_cins_entraineurs, (nb_entraineurs_stored + 1) * sizeof(char*));
+        liste_prenoms_entraineurs = g_realloc(liste_prenoms_entraineurs, (nb_entraineurs_stored + 1) * sizeof(char*));
+
+        liste_noms_entraineurs[nb_entraineurs_stored] = g_strdup(nom);
+        liste_cins_entraineurs[nb_entraineurs_stored] = g_strdup(cin);
+        liste_prenoms_entraineurs[nb_entraineurs_stored] = g_strdup(prenom);
+        nb_entraineurs_stored++;
+    }
+    fclose(fe);
+
+    // Remplir les menus
+    char **items_salles = g_new(char*, nb_salles_stored);
+    for (int i = 0; i < nb_salles_stored; i++) {
+        items_salles[i] = liste_noms_salles[i];
+    }
+    remplir_option_menu(GTK_OPTION_MENU(om_salle), items_salles, nb_salles_stored);
+    g_free(items_salles);
+
+    char **items_entr = g_new(char*, nb_entraineurs_stored);
+    for (int i = 0; i < nb_entraineurs_stored; i++) {
+        items_entr[i] = g_strdup_printf("%s %s", liste_noms_entraineurs[i], liste_prenoms_entraineurs[i]);
+    }
+    remplir_option_menu(GTK_OPTION_MENU(om_entr), items_entr, nb_entraineurs_stored);
+    for (int i = 0; i < nb_entraineurs_stored; i++) {
+        g_free(items_entr[i]);
+    }
+    g_free(items_entr);
+
+    // Charger les inscriptions existantes
+    GtkWidget *treeview = lookup_widget(window, "treeview4");
+    afficher_inscriptions_treeview(treeview);
+}
+
+void
+on_button49_clicked                    (GtkButton       *button,
+                                        gpointer         user_data)
+{
+  GtkWidget *window = gtk_widget_get_toplevel(GTK_WIDGET(button));
+    afficher_statistiques_inscriptions(window);
+}
 

@@ -1,4 +1,4 @@
-1;ali;ghjyt;78456123;jihen.sliti@yahoo.fr;Carte Bancaire;08:00;10:00;1,00;78;1;Mensuel
-2;zjk;klmjk;20123456;krjjrr.hh@gg.tn;Carte Bancaire;08:00;14:00;1,00;78;1;Mensuel
-3;zfff;hhhhh;78456123;ontact@salle.com;Carte Bancaire;08:00;10:00;1,00;40;1;Mensuel
-4;zdeed;dddd;78456123;contact@salle.com;Carte Bancaire;08:00;10:00;100,00;100;1;Mensuel
+
+7;oussama babay;beja;25191064;babayoussama21@gmail.com;Espece;06:00;23:30;70,00;90;1;Mensuel
+8;iii;mednine ;25191067;iiii@gmai.com;Cheque;08:00;22:00;50,00;60;1;Mensuel, Accès libre
+
