@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkWindow" id="coach_hub_window">
+    <property name="title" translatable="yes">Coach Dashboard</property>
+    <property name="default_width">300</property>
+    <property name="default_height">200</property>
+    <property name="border_width">15</property>
+    <property name="window_position">GTK_WIN_POS_CENTER</property>
+    <signal name="destroy" handler="gtk_main_quit" swapped="no"/>
+    <child>
+      <object class="GtkVBox" id="vbox_coach">
+        <property name="visible">True</property>
+        <property name="spacing">10</property>
+        <child>
+          <object class="GtkLabel" id="label_hello_coach">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Hello, Coach!</property>
+            <property name="xalign">0</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="btn_coach_course_registration">
+            <property name="label" translatable="yes">Course Registration</property>
+            <property name="visible">True</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="btn_logout">
+            <property name="label" translatable="yes">Logout</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="padding">10</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
