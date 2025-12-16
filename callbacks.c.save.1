@@ -1,0 +1,758 @@
+#include <gtk/gtk.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include "callbacks.h"
+#include "interface.h"
+#include "support.h"
+
+GtkWidget *global_admin_window = NULL;
+
+// ==================== FILE OPERATIONS ====================
+
+char* generate_equipment_id(void) {
+    static char id[20];
+    static int counter = 0;
+   
+    if (counter == 0) {
+        FILE *f = fopen("equipements.txt", "r");
+        if (f != NULL) {
+            char line[512];
+            while (fgets(line, sizeof(line), f)) {
+                counter++;
+            }
+            fclose(f);
+        }
+    }
+   
+    counter++;
+    sprintf(id, "EQ%05d", counter);
+    return id;
+}
+
+int save_equipment(Equipement eq) {
+    FILE *f = fopen("equipements.txt", "a");
+    if (f == NULL) {
+        g_print("Error: Cannot open file for writing\n");
+        return 0;
+    }
+   
+    fprintf(f, "%s|%s|%s|%s|%s|%d|%d\n",
+            eq.id, eq.nom, eq.type, eq.quantite, eq.date_ajout, eq.etat, eq.garantie);
+   
+    fclose(f);
+    return 1;
+}
+
+int load_all_equipment(Equipement equipements[], int max_size) {
+    FILE *f = fopen("equipements.txt", "r");
+    if (f == NULL) {
+        return 0;
+    }
+   
+    char line[512];
+    int count = 0;
+   
+    while (fgets(line, sizeof(line), f) && count < max_size) {
+        if (sscanf(line, "%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%d|%d",
+                   equipements[count].id,
+                   equipements[count].nom,
+                   equipements[count].type,
+                   equipements[count].quantite,
+                   equipements[count].date_ajout,
+                   &equipements[count].etat,
+                   &equipements[count].garantie) == 7) {
+            count++;
+        }
+    }
+   
+    fclose(f);
+    return count;
+}
+
+int delete_equipment_by_id(const char *id) {
+    Equipement equipements[1000];
+    int count = load_all_equipment(equipements, 1000);
+   
+    FILE *f = fopen("equipements.txt", "w");
+    if (f == NULL) {
+        return 0;
+    }
+   
+    int found = 0;
+    for (int i = 0; i < count; i++) {
+        if (strcmp(equipements[i].id, id) != 0) {
+            fprintf(f, "%s|%s|%s|%s|%s|%d|%d\n",
+                    equipements[i].id,
+                    equipements[i].nom,
+                    equipements[i].type,
+                    equipements[i].quantite,
+                    equipements[i].date_ajout,
+                    equipements[i].etat,
+                    equipements[i].garantie);
+        } else {
+            found = 1;
+        }
+    }
+   
+    fclose(f);
+    return found;
+}
+
+int modify_equipment(Equipement eq) {
+    Equipement equipements[1000];
+    int count = load_all_equipment(equipements, 1000);
+   
+    FILE *f = fopen("equipements.txt", "w");
+    if (f == NULL) {
+        return 0;
+    }
+   
+    int found = 0;
+    for (int i = 0; i < count; i++) {
+        if (strcmp(equipements[i].id, eq.id) == 0) {
+            fprintf(f, "%s|%s|%s|%s|%s|%d|%d\n",
+                    eq.id, eq.nom, eq.type, eq.quantite, eq.date_ajout, eq.etat, eq.garantie);
+            found = 1;
+        } else {
+            fprintf(f, "%s|%s|%s|%s|%s|%d|%d\n",
+                    equipements[i].id,
+                    equipements[i].nom,
+                    equipements[i].type,
+                    equipements[i].quantite,
+                    equipements[i].date_ajout,
+                    equipements[i].etat,
+                    equipements[i].garantie);
+        }
+    }
+   
+    fclose(f);
+    return found;
+}
+
+Equipement* find_equipment_by_id(const char *id) {
+    static Equipement eq;
+    Equipement equipements[1000];
+    int count = load_all_equipment(equipements, 1000);
+   
+    for (int i = 0; i < count; i++) {
+        if (strcmp(equipements[i].id, id) == 0) {
+            eq = equipements[i];
+            return &eq;
+        }
+    }
+   
+    return NULL;
+}
+
+// ==================== TREEVIEW FUNCTIONS ====================
+
+void setup_treeview(GtkWidget *treeview) {
+    GtkListStore *store;
+    GtkCellRenderer *renderer;
+    GtkTreeViewColumn *column;
+   
+    store = gtk_list_store_new(7,
+                              G_TYPE_STRING,
+                              G_TYPE_STRING,
+                              G_TYPE_STRING,
+                              G_TYPE_STRING,
+                              G_TYPE_STRING,
+                              G_TYPE_STRING,
+                              G_TYPE_STRING);
+   
+    gtk_tree_view_set_model(GTK_TREE_VIEW(treeview), GTK_TREE_MODEL(store));
+    g_object_unref(store);
+   
+    // Remove existing columns
+    while (gtk_tree_view_get_columns(GTK_TREE_VIEW(treeview)) != NULL) {
+        GList *columns = gtk_tree_view_get_columns(GTK_TREE_VIEW(treeview));
+        if (columns) {
+            column = GTK_TREE_VIEW_COLUMN(columns->data);
+            gtk_tree_view_remove_column(GTK_TREE_VIEW(treeview), column);
+            g_list_free(columns);
+        } else {
+            break;
+        }
+    }
+   
+    renderer = gtk_cell_renderer_text_new();
+    column = gtk_tree_view_column_new_with_attributes("ID", renderer, "text", 0, NULL);
+    gtk_tree_view_column_set_resizable(column, TRUE);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
+   
+    renderer = gtk_cell_renderer_text_new();
+    column = gtk_tree_view_column_new_with_attributes("Nom", renderer, "text", 1, NULL);
+    gtk_tree_view_column_set_resizable(column, TRUE);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
+   
+    renderer = gtk_cell_renderer_text_new();
+    column = gtk_tree_view_column_new_with_attributes("Type", renderer, "text", 2, NULL);
+    gtk_tree_view_column_set_resizable(column, TRUE);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
+   
+    renderer = gtk_cell_renderer_text_new();
+    column = gtk_tree_view_column_new_with_attributes("Quantité", renderer, "text", 3, NULL);
+    gtk_tree_view_column_set_resizable(column, TRUE);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
+   
+    renderer = gtk_cell_renderer_text_new();
+    column = gtk_tree_view_column_new_with_attributes("Date", renderer, "text", 4, NULL);
+    gtk_tree_view_column_set_resizable(column, TRUE);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
+   
+    renderer = gtk_cell_renderer_text_new();
+    column = gtk_tree_view_column_new_with_attributes("État", renderer, "text", 5, NULL);
+    gtk_tree_view_column_set_resizable(column, TRUE);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
+   
+    renderer = gtk_cell_renderer_text_new();
+    column = gtk_tree_view_column_new_with_attributes("Garantie", renderer, "text", 6, NULL);
+    gtk_tree_view_column_set_resizable(column, TRUE);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
+   
+    g_signal_connect(treeview, "row-activated", G_CALLBACK(on_treeview_row_activated), NULL);
+}
+
+void add_equipment_to_treeview(GtkWidget *treeview, Equipement eq) {
+    GtkListStore *store;
+    GtkTreeIter iter;
+   
+    store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(treeview)));
+   
+    gtk_list_store_append(store, &iter);
+    gtk_list_store_set(store, &iter,
+                      0, eq.id,
+                      1, eq.nom,
+                      2, eq.type,
+                      3, eq.quantite,
+                      4, eq.date_ajout,
+                      5, eq.etat ? "Neuf" : "Ancien",
+                      6, eq.garantie ? "Avec" : "Sans",
+                      -1);
+}
+
+void populate_treeview(GtkWidget *treeview) {
+    Equipement equipements[1000];
+    int count = load_all_equipment(equipements, 1000);
+   
+    clear_treeview(treeview);
+   
+    for (int i = 0; i < count; i++) {
+        add_equipment_to_treeview(treeview, equipements[i]);
+    }
+}
+
+void clear_treeview(GtkWidget *treeview) {
+    GtkListStore *store;
+    store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(treeview)));
+    gtk_list_store_clear(store);
+}
+
+void refresh_treeview(void) {
+    if (global_admin_window != NULL) {
+        GtkWidget *treeview = lookup_widget(global_admin_window, "treeview_equipements");
+        if (treeview) {
+            populate_treeview(treeview);
+        }
+    }
+}
+
+void on_treeview_row_activated(GtkTreeView *treeview, GtkTreePath *path, GtkTreeViewColumn *column, gpointer user_data) {
+    GtkTreeModel *model;
+    GtkTreeIter iter;
+    gchar *id;
+   
+    model = gtk_tree_view_get_model(treeview);
+   
+    if (gtk_tree_model_get_iter(model, &iter, path)) {
+        gtk_tree_model_get(model, &iter, 0, &id, -1);
+        g_print("Selected equipment ID: %s\n", id);
+        g_free(id);
+    }
+}
+
+// ==================== WINDOW CALLBACKS ====================
+
+void on_window_destroy(GtkWidget *widget, gpointer user_data) {
+    gtk_main_quit();
+}
+
+void on_button_continuer_clicked(GtkButton *button, gpointer user_data) {
+    GtkWidget *radio_admin;
+    GtkWidget *main_win;
+    GtkWidget *notebook;
+    g_print("=== BUTTON CLICKED ===\n");
+    radio_admin = lookup_widget(GTK_WIDGET(button), "radiobutton_admin");
+    main_win = lookup_widget(GTK_WIDGET(button), "Gestion des equipements ");
+    g_print("radio_admin: %p\n", radio_admin);
+    g_print("main_win: %p\n", main_win);
+    if (!main_win) {
+        g_print("Error: Cannot find main window\n");
+        return;
+    }
+   
+    notebook = lookup_widget(main_win, "notebook1");
+   
+    if (!notebook) {
+        g_print("Error: Cannot find notebook\n");
+        return;
+    }
+   
+    if (radio_admin && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radio_admin))) {
+        gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook), 0);
+        global_admin_window = main_win;
+        GtkWidget *treeview = lookup_widget(main_win, "treeview_equipements");
+        if (treeview) {
+            setup_treeview(treeview);
+            populate_treeview(treeview);
+        }
+    } else {
+        gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook), 1);
+    }
+   
+    gtk_widget_hide(lookup_widget(GTK_WIDGET(button), "main_window"));
+    gtk_widget_show(main_win);
+}
+
+// ==================== ADMINISTRATOR CALLBACKS ====================
+
+void on_button_chercher_clicked(GtkButton *button, gpointer user_data) {
+    GtkWidget *entry;
+    GtkWidget *treeview;
+    const gchar *search_text;
+    Equipement equipements[1000];
+    int count;
+   
+    entry = lookup_widget(GTK_WIDGET(button), "entry_chercher");
+    treeview = lookup_widget(GTK_WIDGET(button), "treeview_equipements");
+   
+    if (!entry || !treeview) {
+        g_print("Error: Cannot find search entry or treeview\n");
+        return;
+    }
+   
+    search_text = gtk_entry_get_text(GTK_ENTRY(entry));
+   
+    if (strlen(search_text) == 0) {
+        populate_treeview(treeview);
+        return;
+    }
+   
+    count = load_all_equipment(equipements, 1000);
+    clear_treeview(treeview);
+   
+    for (int i = 0; i < count; i++) {
+        if (strstr(equipements[i].nom, search_text) != NULL ||
+            strstr(equipements[i].type, search_text) != NULL ||
+            strstr(equipements[i].id, search_text) != NULL) {
+            add_equipment_to_treeview(treeview, equipements[i]);
+        }
+    }
+}
+
+void on_button_ajouter_clicked(GtkButton *button, gpointer user_data) {
+    GtkWidget *add_window = create_window_d_ajout();
+    gtk_widget_show(add_window);
+}
+
+void on_button_modif_clicked(GtkButton *button, gpointer user_data) {
+    GtkWidget *treeview;
+    GtkTreeSelection *selection;
+    GtkTreeModel *model;
+    GtkTreeIter iter;
+    gchar *id;
+   
+    treeview = lookup_widget(GTK_WIDGET(button), "treeview_equipements");
+    if (!treeview) {
+        g_print("Error: Cannot find treeview\n");
+        return;
+    }
+   
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+   
+    if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
+        gtk_tree_model_get(model, &iter, 0, &id, -1);
+       
+        Equipement *eq = find_equipment_by_id(id);
+        if (eq) {
+            GtkWidget *modify_window = create_window_de_modification();
+           
+            g_object_set_data_full(G_OBJECT(modify_window), "equipment_id", g_strdup(id), g_free);
+           
+            gtk_widget_show(modify_window);
+        }
+        g_free(id);
+    } else {
+        GtkWidget *dialog = gtk_message_dialog_new(NULL,
+                                                   GTK_DIALOG_MODAL,
+                                                   GTK_MESSAGE_WARNING,
+                                                   GTK_BUTTONS_OK,
+                                                   "Veuillez sélectionner un équipement à modifier");
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+    }
+}
+
+void on_button_supprimer_clicked(GtkButton *button, gpointer user_data) {
+    GtkWidget *treeview;
+    GtkTreeSelection *selection;
+    GtkTreeModel *model;
+    GtkTreeIter iter;
+    gchar *id;
+   
+    treeview = lookup_widget(GTK_WIDGET(button), "treeview_equipements");
+    if (!treeview) return;
+   
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+   
+    if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
+        gtk_tree_model_get(model, &iter, 0, &id, -1);
+       
+        GtkWidget *dialog = gtk_message_dialog_new(NULL,
+                                                   GTK_DIALOG_MODAL,
+                                                   GTK_MESSAGE_QUESTION,
+                                                   GTK_BUTTONS_YES_NO,
+                                                   "Voulez-vous vraiment supprimer cet équipement?");
+       
+        if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_YES) {
+            if (delete_equipment_by_id(id)) {
+                refresh_treeview();
+                g_print("Equipment deleted successfully\n");
+            }
+        }
+       
+        gtk_widget_destroy(dialog);
+        g_free(id);
+    } else {
+        GtkWidget *dialog = gtk_message_dialog_new(NULL,
+                                                   GTK_DIALOG_MODAL,
+                                                   GTK_MESSAGE_WARNING,
+                                                   GTK_BUTTONS_OK,
+                                                   "Veuillez sélectionner un équipement à supprimer");
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+    }
+}
+
+void on_button5_clicked(GtkButton *button, gpointer user_data) {
+    GtkWidget *entry = lookup_widget(GTK_WIDGET(button), "entry_chercher");
+    if (entry) {
+        gtk_entry_set_text(GTK_ENTRY(entry), "");
+    }
+    refresh_treeview();
+}
+
+// ==================== ADD EQUIPMENT ====================
+
+void on_button_ajouter1_clicked(GtkButton *button, gpointer user_data) {
+    GtkWidget *entry_id, *combo_type, *spin_quantite;
+    GtkWidget *radio_neuf, *check_garantie;
+    GtkWidget *spin_jour, *spin_mois, *spin_ans;
+    Equipement eq;
+   
+    entry_id = lookup_widget(GTK_WIDGET(button), "entry_id_ajouter");
+    combo_type = lookup_widget(GTK_WIDGET(button), "combobox_type");
+    spin_quantite = lookup_widget(GTK_WIDGET(button), "spinbutton_quantité_ajouté");
+    radio_neuf = lookup_widget(GTK_WIDGET(button), "radiobutton_neuf");
+    check_garantie = lookup_widget(GTK_WIDGET(button), "checkbutton_avecgarantie");
+    spin_jour = lookup_widget(GTK_WIDGET(button), "spinbutton_jour");
+    spin_mois = lookup_widget(GTK_WIDGET(button), "spinbutton_mois");
+    spin_ans = lookup_widget(GTK_WIDGET(button), "spinbutton_ans");
+   
+    if (!entry_id || !combo_type || !spin_quantite) {
+        g_print("Error: Cannot find form fields\n");
+        return;
+    }
+   
+    const gchar *id = gtk_entry_get_text(GTK_ENTRY(entry_id));
+   
+    if (strlen(id) == 0) {
+        GtkWidget *dialog = gtk_message_dialog_new(NULL,
+                                                   GTK_DIALOG_MODAL,
+                                                   GTK_MESSAGE_WARNING,
+                                                   GTK_BUTTONS_OK,
+                                                   "Veuillez remplir tous les champs");
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+        return;
+    }
+   
+    strcpy(eq.id, id);
+    strcpy(eq.nom, id);
+   
+    gchar *type_text = gtk_combo_box_get_active_text(GTK_COMBO_BOX(combo_type));
+    if (type_text) {
+        strcpy(eq.type, type_text);
+        g_free(type_text);
+    } else {
+        strcpy(eq.type, "Non spécifié");
+    }
+   
+    sprintf(eq.quantite, "%d", gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_quantite)));
+   
+    int jour = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_jour));
+    int mois = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_mois));
+    int ans = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_ans));
+    sprintf(eq.date_ajout, "%02d/%02d/%d", jour, mois, ans);
+   
+    eq.etat = radio_neuf ? gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radio_neuf)) : 0;
+    eq.garantie = check_garantie ? gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(check_garantie)) : 0;
+   
+    if (save_equipment(eq)) {
+        GtkWidget *dialog = gtk_message_dialog_new(NULL,
+                                                   GTK_DIALOG_MODAL,
+                                                   GTK_MESSAGE_INFO,
+                                                   GTK_BUTTONS_OK,
+                                                   "Équipement ajouté avec succès!");
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+       
+        refresh_treeview();
+       
+        GtkWidget *window = lookup_widget(GTK_WIDGET(button), "window d'ajout");
+        if (window) gtk_widget_destroy(window);
+    }
+}
+
+void on_button_annulerlajout_clicked(GtkButton *button, gpointer user_data) {
+    GtkWidget *window = lookup_widget(GTK_WIDGET(button), "window d'ajout");
+    if (window) gtk_widget_destroy(window);
+}
+
+// ==================== MODIFY EQUIPMENT ====================
+
+void on_button_modifier1_clicked(GtkButton *button, gpointer user_data) {
+    GtkWidget *window;
+    GtkWidget *entry_nom, *entry_type, *spin_quantite;
+    GtkWidget *radio_neuf;
+    const gchar *id;
+    Equipement eq;
+   
+    window = lookup_widget(GTK_WIDGET(button), "window de modification");
+    id = g_object_get_data(G_OBJECT(window), "equipment_id");
+   
+    if (!id) {
+        g_print("Error: No equipment ID found\n");
+        return;
+    }
+   
+    entry_nom = lookup_widget(GTK_WIDGET(button), "entry_nom_modifier");
+    entry_type = lookup_widget(GTK_WIDGET(button), "entry_type_modifier");
+    spin_quantite = lookup_widget(GTK_WIDGET(button), "spinbutton_quantite_modifier");
+    radio_neuf = lookup_widget(GTK_WIDGET(button), "radiobutton_neuf_modif");
+   
+    Equipement *old_eq = find_equipment_by_id(id);
+    if (old_eq) {
+        strcpy(eq.id, old_eq->id);
+        strcpy(eq.nom, gtk_entry_get_text(GTK_ENTRY(entry_nom)));
+        strcpy(eq.type, gtk_entry_get_text(GTK_ENTRY(entry_type)));
+        sprintf(eq.quantite, "%d", gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_quantite)));
+        strcpy(eq.date_ajout, old_eq->date_ajout);
+        eq.etat = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radio_neuf)) ? 1 : 0;
+        eq.garantie = old_eq->garantie;
+       
+        if (modify_equipment(eq)) {
+            GtkWidget *dialog = gtk_message_dialog_new(NULL,
+                                                       GTK_DIALOG_MODAL,
+                                                       GTK_MESSAGE_INFO,
+                                                       GTK_BUTTONS_OK,
+                                                       "Équipement modifié avec succès!");
+            gtk_dialog_run(GTK_DIALOG(dialog));
+            gtk_widget_destroy(dialog);
+           
+            refresh_treeview();
+            gtk_widget_destroy(window);
+        }
+    }
+}
+
+void on_button_annulermodif_clicked(GtkButton *button, gpointer user_data) {
+    GtkWidget *window = lookup_widget(GTK_WIDGET(button), "window de modification");
+    if (window) gtk_widget_destroy(window);
+}
+
+// ==================== DELETE EQUIPMENT ====================
+
+void on_button_supprimer1_clicked(GtkButton *button, gpointer user_data) {
+    GtkWidget *entry_recherche;
+    const gchar *search_text;
+   
+    entry_recherche = lookup_widget(GTK_WIDGET(button), "entry_recherche_supprimer");
+   
+    if (!entry_recherche) {
+        g_print("Error: Cannot find search entry\n");
+        return;
+    }
+   
+    search_text = gtk_entry_get_text(GTK_ENTRY(entry_recherche));
+   
+    if (strlen(search_text) == 0) {
+        GtkWidget *dialog = gtk_message_dialog_new(NULL,
+                                                   GTK_DIALOG_MODAL,
+                                                   GTK_MESSAGE_WARNING,
+                                                   GTK_BUTTONS_OK,
+                                                   "Veuillez entrer un ID d'équipement");
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+        return;
+    }
+   
+    GtkWidget *dialog = gtk_message_dialog_new(NULL,
+                                               GTK_DIALOG_MODAL,
+                                               GTK_MESSAGE_QUESTION,
+                                               GTK_BUTTONS_YES_NO,
+                                               "Voulez-vous vraiment supprimer cet équipement?");
+   
+    if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_YES) {
+        if (delete_equipment_by_id(search_text)) {
+            refresh_treeview();
+           
+            GtkWidget *success = gtk_message_dialog_new(NULL,
+                                                       GTK_DIALOG_MODAL,
+                                                       GTK_MESSAGE_INFO,
+                                                       GTK_BUTTONS_OK,
+                                                       "Équipement supprimé avec succès!");
+            gtk_dialog_run(GTK_DIALOG(success));
+            gtk_widget_destroy(success);
+           
+            GtkWidget *window = lookup_widget(GTK_WIDGET(button), "window de suppresion");
+            if (window) gtk_widget_destroy(window);
+        }
+    }
+   
+    gtk_widget_destroy(dialog);
+}
+
+void on_button_annulersupprimer_clicked(GtkButton *button, gpointer user_data) {
+    GtkWidget *window = lookup_widget(GTK_WIDGET(button), "window de suppresion");
+    if (window) gtk_widget_destroy(window);
+}
+
+void on_button_recherchersupprimer_clicked(GtkButton *button, gpointer user_data) {
+    GtkWidget *entry_recherche;
+    const gchar *search_text;
+   
+    entry_recherche = lookup_widget(GTK_WIDGET(button), "entry_recherche_supprimer");
+   
+    if (!entry_recherche) return;
+   
+    search_text = gtk_entry_get_text(GTK_ENTRY(entry_recherche));
+   
+    Equipement *eq = find_equipment_by_id(search_text);
+   
+    if (eq) {
+        g_print("Found equipment: %s - %s\n", eq->id, eq->nom);
+    } else {
+        GtkWidget *dialog = gtk_message_dialog_new(NULL,
+                                                   GTK_DIALOG_MODAL,
+                                                   GTK_MESSAGE_WARNING,
+                                                   GTK_BUTTONS_OK,
+                                                   "Équipement non trouvé!");
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+    }
+}
+
+// ==================== RESERVE EQUIPMENT ====================
+
+void on_button_continuer2_clicked(GtkButton *button, gpointer user_data) {
+    GtkWidget *entry_nom_equip, *entry_cours;
+    GtkWidget *combo_nom_equip;
+    const gchar *nom_equip, *cours;
+   
+    entry_nom_equip = lookup_widget(GTK_WIDGET(button), "entrynom_reserver");
+    entry_cours = lookup_widget(GTK_WIDGET(button), "entry4");
+    combo_nom_equip = lookup_widget(GTK_WIDGET(button), "combobox_nom_equip");
+   
+    if (!entry_nom_equip || !entry_cours) {
+        g_print("Error: Cannot find form fields\n");
+        return;
+    }
+   
+    nom_equip = gtk_entry_get_text(GTK_ENTRY(entry_nom_equip));
+    cours = gtk_entry_get_text(GTK_ENTRY(entry_cours));
+   
+    if (strlen(nom_equip) == 0 || strlen(cours) == 0) {
+        GtkWidget *dialog = gtk_message_dialog_new(NULL,
+                                                   GTK_DIALOG_MODAL,
+                                                   GTK_MESSAGE_WARNING,
+                                                   GTK_BUTTONS_OK,
+                                                   "Veuillez remplir tous les champs");
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+        return;
+    }
+   
+    FILE *f = fopen("reservations.txt", "a");
+    if (f != NULL) {
+        time_t t = time(NULL);
+        struct tm tm = *localtime(&t);
+        fprintf(f, "%s|%s|%02d/%02d/%d\n", nom_equip, cours, tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+        fclose(f);
+       
+        GtkWidget *dialog = gtk_message_dialog_new(NULL,
+                                                   GTK_DIALOG_MODAL,
+                                                   GTK_MESSAGE_INFO,
+                                                   GTK_BUTTONS_OK,
+                                                   "Réservation effectuée avec succès!");
+gtk_dialog_run(GTK_DIALOG(dialog));
+gtk_widget_destroy(dialog);
+}
+}
+void on_button_reserver_clicked(GtkButton *button, gpointer user_data) {
+GtkWidget *entry_entraineur, *entry_equipement;
+const gchar *entraineur, *equipement;
+entry_entraineur = lookup_widget(GTK_WIDGET(button), "entry_nom_entraineur");
+entry_equipement = lookup_widget(GTK_WIDGET(button), "entry_nom_equipement_reserver");
+
+if (!entry_entraineur || !entry_equipement) {
+    g_print("Error: Cannot find form fields\n");
+    return;
+}
+
+entraineur = gtk_entry_get_text(GTK_ENTRY(entry_entraineur));
+equipement = gtk_entry_get_text(GTK_ENTRY(entry_equipement));
+
+if (strlen(entraineur) == 0 || strlen(equipement) == 0) {
+    GtkWidget *dialog = gtk_message_dialog_new(NULL,
+                                               GTK_DIALOG_MODAL,
+                                               GTK_MESSAGE_WARNING,
+                                               GTK_BUTTONS_OK,
+                                               "Veuillez remplir tous les champs");
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+    return;
+}
+
+FILE *f = fopen("reservations.txt", "a");
+if (f != NULL) {
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    fprintf(f, "%s|%s|%02d/%02d/%d\n", entraineur, equipement, tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+    fclose(f);
+   
+    GtkWidget *dialog = gtk_message_dialog_new(NULL,
+                                               GTK_DIALOG_MODAL,
+                                               GTK_MESSAGE_INFO,
+                                               GTK_BUTTONS_OK,
+                                               "Réservation effectuée avec succès!");
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+   
+    GtkWidget *window = lookup_widget(GTK_WIDGET(button), "window de reservation");
+    if (window) gtk_widget_destroy(window);
+}
+}
+void on_button_annulerreserver_clicked(GtkButton *button, gpointer user_data) {
+GtkWidget *window = lookup_widget(GTK_WIDGET(button), "window de reservation");
+if (window) gtk_widget_destroy(window);
+}
+
+
+void
+on_button_continuer_clicked            (GtkButton       *button,
+                                        gpointer         user
+}
+

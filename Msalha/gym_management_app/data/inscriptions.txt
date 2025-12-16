@@ -1,0 +1,2 @@
+CIN123|Doe|John|Basketball|Cours de Yoga|15/2/2025|Mixte|Adulte
+CIN123|Doe|John|Basketball|Cours de Yoga|15/2/2025|Mixte|Adulte
